@@ -81,7 +81,7 @@ sed -i '8,13 s/AllowOverride None/AllowOverride All/g' /etc/apache2/sites-enable
 #Copia de seguridad
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config_bak
 
-#Cambiamos puerto por defecto para mayor seguridad
+#Cambiamos el puerto por defecto para mayor seguridad
 perl -pi -e "s/Port 22/Port 21976/g" /etc/ssh/sshd_config
 
 #Habilitamos la version 2
@@ -121,11 +121,25 @@ perl -pi -e "s/#   security = user/security = user/g" /etc/samba/smb.conf
 #Habilitar carpetas personales para el Cloud
 perl -pi -e "s/;[homes]/[homes]/g" /etc/samba/smb.conf
 perl -pi -e "s/;   comment = Home Directories/comment = Directorio Personal/g" /etc/samba/smb.conf
-perl -pi -e "s/;   browseable = no/browseable = yes/g" /etc/samba/smb.conf
-perl -pi -e "s/;   read only = yes/read only = no/g" /etc/samba/smb.conf
-perl -pi -e "s/;   create mask = 0700/create mask = 0700/g" /etc/samba/smb.conf
-perl -pi -e "s/;   directory mask = 0700/directory mask = 0700/g" /etc/samba/smb.conf
-perl -pi -e "s/;   valid users = %S/valid users = %U/g" /etc/samba/smb.conf
+sed -i '295,328 s/;   browseable = no/browseable = yes/g' /etc/samba/smb.conf
+sed -i '295,328 s/;   read only = yes/read only = no/g' /etc/samba/smb.conf
+sed -i '295,328 s/;   create mask = 0700/create mask = 0700/g' /etc/samba/smb.conf
+sed -i '295,328 s/;   directory mask = 0700/directory mask = 0700/g' /etc/samba/smb.conf
+sed -i '295,328 s/;   valid users = %S/valid users = %U/g' /etc/samba/smb.conf
+
+#Añadimos directivas para mejorar la velocidad en la VPN
+sed -i '66i\### Rendimiento ###' /etc/samba/smb.conf
+sed -i '67i\use sendfile = yes' /etc/samba/smb.conf
+sed -i '68i\strict locking = no' /etc/samba/smb.conf
+sed -i '69i\read raw = yes' /etc/samba/smb.conf
+sed -i '70i\write raw = yes' /etc/samba/smb.conf
+sed -i '71i\oplocks = yes' /etc/samba/smb.conf
+sed -i '72i\aio read size = 65535' /etc/samba/smb.conf
+sed -i '73i\max xmit = 65535' /etc/samba/smb.conf
+sed -i '74i\deadtime = 15' /etc/samba/smb.conf
+sed -i '75i\getwd cache = yes' /etc/samba/smb.conf
+sed -i '76i\socket options = TCP_NODELAY SO_SNDBUF=65535 SO_RCVBUF=65535' /etc/samba/smb.conf
+sed -i '77i\ ' /etc/samba/smb.conf
 
 #Creación de la carpeta compartida para todos los usuarios
 echo "[CinemaScopeHD]" >> /etc/samba/smb.conf
@@ -177,7 +191,7 @@ cd /etc/openvpn/easy-rsa/keys/
 cp ca.crt cshdcliente.crt cshdcliente.key ~/CSHD/ca/windows/
 cp ca.crt cshdcliente.crt cshdcliente.key ~/CSHD/ca/linux
 
-#Generamos los archivos de configuracion de la VPn para ambos clientes, Windows y Linux
+#Generamos los archivos de configuracion de la VPN para ambos clientes, Windows y Linux
 #Extraemos la ip publica para generar los archivos de configuracion
 ip=$(ip addr show eth0 | grep "inet " | sed "s/^.*inet //" | sed "s/\/.*$//" )
 
