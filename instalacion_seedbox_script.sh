@@ -155,49 +155,49 @@ source vars
 ./build-key cshdcliente
 
 #Creamos dos carpetas para almacenar los archivos de configuracion necesarios para ambos sistemas
-mkdir -p ~/cshd-config/windows
-mkdir ~/cshd-config/linux
+mkdir -p ~/CSHD/ca/windows
+mkdir ~/CSHD/ca/linux
 
 #Copiamos las claves del cliente para generar un pack para ambos sistemas Windows y Linux
 cd /etc/openvpn/easy-rsa/keys/
-cp ca.crt cshdcliente.crt cshdcliente.key ~/cshd-config/windows/
-cp ca.crt cshdcliente.crt cshdcliente.key ~/cshd-config/linux
+cp ca.crt cshdcliente.crt cshdcliente.key ~/CSHD/ca/windows/
+cp ca.crt cshdcliente.crt cshdcliente.key ~/CSHD/ca/linux
 
 #Generamos los archivos de configuracion de la VPn para ambos clientes, Windows y Linux
 #Extraemos la ip publica para generar los archivos de configuracion
 ip=$(ip addr show eth0 | grep "inet " | sed "s/^.*inet //" | sed "s/\/.*$//" )
 
 #Configuracion cliente Windows
-touch ~/cshd-config/windows/client.ovpn
-echo "client" >> ~/cshd-config/windows/client.ovpn
-echo "remote $ip" >> ~/cshd-config/windows/client.ovpn
-echo "port 1194" >> ~/cshd-config/windows/client.ovpn
-echo "proto udp" >> ~/cshd-config/windows/client.ovpn
-echo "dev tun" >> ~/cshd-config/windows/client.ovpn
-echo "dev-type tun" >> ~/cshd-config/windows/client.ovpn
-echo "ns-cert-type server" >> ~/cshd-config/windows/client.ovpn
-echo "reneg-sec 86400" >> ~/cshd-config/windows/client.ovpn
-echo "auth-user-pass" >> ~/cshd-config/windows/client.ovpn
-echo "auth-retry interact" >> ~/cshd-config/windows/client.ovpn
-echo "comp-lzo yes" >> ~/cshd-config/windows/client.ovpn
-echo "verb 3" >> ~/cshd-config/windows/client.ovpn
-echo "ca ca.crt" >> ~/cshd-config/windows/client.ovpn
-echo "cert cshdserver.crt" >> ~/cshd-config/windows/client.ovpn
-echo "key cshdserver.key" >> ~/cshd-config/windows/client.ovpn
-echo "management 127.0.0.1 1194" >> ~/cshd-config/windows/client.ovpn
-echo "management-hold" >> ~/cshd-config/windows/client.ovpn
-echo "management-query-passwords" >> ~/cshd-config/windows/client.ovpn
-echo "auth-retry interact" >> ~/cshd-config/windows/client.ovpn
+touch ~/CSHD/ca/windows/client.ovpn
+echo "client" >> ~/CSHD/ca/windows/client.ovpn
+echo "remote $ip" >> ~/CSHD/ca/windows/client.ovpn
+echo "port 1194" >> ~/CSHD/ca/windows/client.ovpn
+echo "proto udp" >> ~/CSHD/ca/windows/client.ovpn
+echo "dev tun" >> ~/CSHD/ca/windows/client.ovpn
+echo "dev-type tun" >> ~/CSHD/ca/windows/client.ovpn
+echo "ns-cert-type server" >> ~/CSHD/ca/windows/client.ovpn
+echo "reneg-sec 86400" >> ~/CSHD/ca/windows/client.ovpn
+echo "auth-user-pass" >> ~/CSHD/ca/windows/client.ovpn
+echo "auth-retry interact" >> ~/CSHD/ca/windows/client.ovpn
+echo "comp-lzo yes" >> ~/CSHD/ca/windows/client.ovpn
+echo "verb 3" >> ~/CSHD/ca/windows/client.ovpn
+echo "ca ca.crt" >> ~/CSHD/ca/windows/client.ovpn
+echo "cert cshdserver.crt" >> ~/CSHD/ca/windows/client.ovpn
+echo "key cshdserver.key" >> ~/CSHD/ca/windows/client.ovpn
+echo "management 127.0.0.1 1194" >> ~/CSHD/ca/windows/client.ovpn
+echo "management-hold" >> ~/CSHD/ca/windows/client.ovpn
+echo "management-query-passwords" >> ~/CSHD/ca/windows/client.ovpn
+echo "auth-retry interact" >> ~/CSHD/ca/windows/client.ovpn
 
 #Generamos el archivos de configuracion de Linux
-cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf ~/cshd-config/linux/
-perl -pi -e "s/remote my-server-1 1194/remote $ip 1194/g" ~/cshd-config/linux/client.conf
-perl -pi -e "s/cert client.cert/cshdclient.cert/g" ~/cshd-config/linux/client.conf
-perl -pi -e "s/key client.key/cshdclient.key/g" ~/cshd-config/linux/client.conf
+cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf ~/CSHD/ca/linux/
+perl -pi -e "s/remote my-server-1 1194/remote $ip 1194/g" ~/CSHD/ca/linux/client.conf
+perl -pi -e "s/cert client.cert/cshdclient.cert/g" ~/CSHD/ca/linux/client.conf
+perl -pi -e "s/key client.key/cshdclient.key/g" ~/CSHD/ca/linux/client.conf
 
 #Creamos un zip de ambas carpetas
-zip ~/cshd-config/cliente_win.zip ~/cshd-config/windows/*
-tar -czfv ~/cshd-config/cliente_lin.tar.gz ~/cshd-config/linux/*
+zip ~/CSHD/ca/cliente_win.zip ~/CSHD/ca/windows/*
+tar -czfv ~/CSHD/ca/cliente_lin.tar.gz ~/CSHD/ca/linux/*
 
 #Movemos los archivos comprimidos a /var/www para que se lo puedan descargar los usuarios desde la web.
 mkdir /var/www/ca/
@@ -205,8 +205,8 @@ mkdir /var/www/ca/
 #Damos permisos a www-data en la nueva carpeta
 chown www-data:www-data /var/www/ca
 chmod 755 /var/www/ca
-mv ~/cshd-config/cliente_win.zip /var/www/ca/
-mv ~/cshd-config/cliente_lin.tar.gz /var/www/ca/
+mv ~/CSHD/ca/cliente_win.zip /var/www/ca/
+mv ~/CSHD/ca/cliente_lin.tar.gz /var/www/ca/
 
 #Damos permisos 555 al archivo para su descarga
 chmod 555 /var/www/ca/cliente_win.zip
@@ -247,6 +247,11 @@ quotacheck -avug
 #Habilitamos las quotas en el directorio /home
 quotaon /home
 
+#Creamos la carpeta para añadir los archivos para añadir y elimnar usuarios localmente
+mkdir /etc/cshd/
+
+#Copiamos los archivos de añadir y eliminar usuarios en su ruta
+cp ~/CSHD/source/* /etc/cshd/
 #Creamos una entrada en bashrc para crear un alias al script
 echo "#Inicio Alias Personalizados" >> /etc/bash.bashrc
 echo "alias cshdadduser='sh /etc/cshd/csadduser.sh'" >> /etc/bash.bashrc
