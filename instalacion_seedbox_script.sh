@@ -247,26 +247,11 @@ quotacheck -avug
 #Habilitamos las quotas en el directorio /home
 quotaon /home
 
-#Generamos Scripts secundarios
-#Script creacion de usuario local
-mkdir /etc/cshd/
-touch /etc/cshd/csuser.sh
-echo "#!/bin/bash" >> /etc/cshd/csuser.sh
-echo "#" >> /etc/cshd/csuser.sh
-echo "#csuser.sh" >> /etc/cshd/csuser.sh
-echo "#Script para añadir usuarios y configurarlos en el servidor automaticamente." >> /etc/cshd/csuser.sh
-echo "#Extraer variables" >> /etc/cshd/csuser.sh
-echo "mes=$[$(date +%m)+1]" >> /etc/cshd/csuser.sh
-echo "#Creamos el usuario con sus opciones " >> /etc/cshd/csuser.sh
-echo "useradd -d /home/$1 -e $(date +%d/$mes/%Y) -g 1221 -m -s /bin/false $1" >> /etc/cshd/csuser.sh
-echo "passwd $1 " >> /etc/cshd/csuser.sh
-echo "#Añadimos al usuario en Samba" >> /etc/cshd/csuser.sh
-echo "smbpasswd -a $1" >> /etc/cshd/csuser.sh
-echo "#Habilitamos las quotas en /home para el Cloud" >> /etc/cshd/csuser.sh
-echo "setquota -u $1 1457280 30000000 0 0 /home" >> /etc/cshd/csuser.sh
-
 #Creamos una entrada en bashrc para crear un alias al script
-echo "alias csuser='sh /etc/cshd/csuser.sh'" >> /etc/bash.bashrc
+echo "#Inicio Alias Personalizados" >> /etc/bash.bashrc
+echo "alias cshdadduser='sh /etc/cshd/csadduser.sh'" >> /etc/bash.bashrc
+echo "alias cshddeluser='sh /etc/cshd/csdeluser.sh'" >> /etc/bash.bashrc
+echo "#Fin Alias Personalizados" >> /etc/bash.bashrc
 
 #Cargamos los sources
 source /etc/bash.bashrc
