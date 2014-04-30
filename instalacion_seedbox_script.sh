@@ -36,11 +36,22 @@ done
 
 #Almacenar la contraseña para MySQL
 echo Contraseña de root para MySQL:
-read passmysql
+    read passmysql
 
+#Almacenamos la contraseña para PhpMyAdmin
+echo Contraseña de root para PhpMyAdmin:
+    read passphpmyadmin
+    
 #Almacenamos la contraseña de mysql en debconf para desatenderla del usuario.
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password' $passmysql
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password' $passmysql
+
+#Almacenamos la contraseña de phpmyadmin en debconf para desatenderla del usuario.
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/dbconfig-install boolean true'
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/app-password-confirm password' $passphpmyadmin
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/admin-pass password' $passmysql
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/app-pass password' $passmysql
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
 
 #Actualizacion de los repositorios#
 apt-get update
@@ -50,6 +61,9 @@ apt-get -y upgrade
 
 #Instalacion de los paquetes necesarios para el servidor#
 apt-get install apache2 php5 php5-curl libapache2-mod-php5 mysql-client mysql-server phpmyadmin sendmail vsftpd lftp samba samba-common smbfs smbclient openvpn openssl openssh-server zip quota webmin whois sudo makepasswd git
+
+#Creamos el grupo para los usuarioa
+groupadd -g 1221 usuarios
 
 ##Apache2##
 #========#
