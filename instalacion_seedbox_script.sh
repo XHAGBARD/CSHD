@@ -279,12 +279,17 @@ quotaon /home
 mkdir /etc/cshd/
 
 #Copiamos los archivos de añadir y eliminar usuarios en su ruta
-cp ~/CSHD/source/* /etc/cshd/
+cp ~/CSHD/source/csadduser.sh /etc/cshd/
+cp ~/CSHD/source/csdeluser.sh /etc/cshd/
 #Creamos una entrada en bashrc para crear un alias al script
 echo "#Inicio Alias Personalizados" >> /etc/bash.bashrc
 echo "alias cshdadduser='sh /etc/cshd/csadduser.sh'" >> /etc/bash.bashrc
 echo "alias cshddeluser='sh /etc/cshd/csdeluser.sh'" >> /etc/bash.bashrc
 echo "#Fin Alias Personalizados" >> /etc/bash.bashrc
+
+#Copiamos los manuales de ambos scripts
+cp ~/CSHD/source/csadduser.1 /usr/share/man/man1
+cp ~/CSHD/source/csdeluser.1 /usr/share/man/man1
 
 #Cargamos los sources
 source /etc/bash.bashrc
