@@ -301,7 +301,8 @@ iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 #Añadimos al fstab las opciones para habilitar las quotas en el directorio /home
 #Copia de seguridad de fstab
 cp /etc/fstab /etc/fstab_bak
-awk '$2~"^/home$"{$4="usrquota,grpquota,"$4}1' OFS="\t" /etc/fstab > /etc/fstab
+awk '$2~"^/home$"{$4="usrquota,grpquota,"$4}1' OFS="\t" /etc/fstab > /etc/fstab_pre
+cp /etc/fstab_pre /etc/fstab
 
 #Remontamos las unidades para efectuar los cambios
 mount -o remount /home
