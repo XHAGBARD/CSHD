@@ -65,6 +65,9 @@ apt-get install apache2 php5 php5-curl libapache2-mod-php5 mysql-client mysql-se
 #Creamos el grupo para los usuarioa
 groupadd -g 1221 usuarios
 
+#Creamos carpeta para usarla posteriormente
+mkdir /etc/cshd/
+
 ##Apache2##
 #========#
 #Activacion modulo mod_rewrite
@@ -75,6 +78,26 @@ cp /etc/apache2/sites-available/default /etc/apache2/sites-enabled/default
 
 #Modificar AllowOverride del default
 sed -i '8,13 s/AllowOverride None/AllowOverride All/g' /etc/apache2/sites-enabled/default
+
+#Añadir modulo Zend  para soporte Joomla
+echo "zend_extension = /usr/lib/php5/20090626/ioncube_loader_lin_5.3.so" >> /etc/php5/apache2/php.ini
+
+#Copiamos el módulo Zend a su directorio
+cp ~/CSHD/source/ioncube_loader_lin_5.3.so /usr/lib/php5/20090626/
+
+##Fin Apache2##
+
+##Copia de Seguridad##
+#====================#
+
+#Programamos copia de seguridad para la BBDD
+touch /etc/cshd/cpbbdd.sh
+echo "wget --max-redirect=10000 'http://www.cinemascopehd.me/index.php?option=com_akeeba&view=backup&key=copiaseguridad'" >> /etc/cshd/cpbbdd.sh
+
+#Programamos cron para iniciar la copia semanalmente los lunes a la madrugada
+echo "0 0 * * 1 root /etc/cshd/cpbbdd.sh" >> /etc/crontab
+
+##Fin Copia de Seguridad##
 
 ##SSH##
 #=====#
@@ -90,6 +113,8 @@ perl -pi -e "s/#Protocol 2/Protocol 2/g" /etc/ssh/sshd_config
 #Ampliamos la seguridad a 2048Bits
 perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 2048/g" /etc/ssh/sshd_config
 
+##Fin SSH##
+
 ##VSFTP##
 #======#
 #Copia de seguridad
@@ -100,6 +125,8 @@ perl -pi -e "s/#write_enable=YES/write_enable=YES/g" /etc/vsftpd.conf
 
 #Cambiamos y habilitamos el mensaje de bienvenida del servidor FTP
 perl -pi -e "s/#ftpd_banner=Welcome to blah FTP service./ftpd_banner=Servidor CinemaScopeHD FTP/g" /etc/vsftpd.conf
+
+##Fin VSFTP##
 
 ##SAMBA##
 #=======#
@@ -150,6 +177,7 @@ echo "writable=no" >> /etc/samba/smb.conf
 echo "browseable=yes" >> /etc(samba/smb.conf
 echo "readonly=yes" >> /etc/samba/smb.conf
 
+##Fin SAMBA##
 
 ##OpenVPN##
 #=========#
@@ -259,6 +287,8 @@ sysctl -w net.ipv4.ip_forward=1
 #Habilitamos el enmascaramiento para la red virtual
 iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 
+##Fin OpenVPN##
+
 ##QUOTAS##
 #========#
 #Añadimos al fstab las opciones para habilitar las quotas en el directorio /home
@@ -275,8 +305,7 @@ quotacheck -avug
 #Habilitamos las quotas en el directorio /home
 quotaon /home
 
-#Creamos la carpeta para añadir los archivos para añadir y elimnar usuarios localmente
-mkdir /etc/cshd/
+##Fin QUOTAS##
 
 #Copiamos los archivos de añadir y eliminar usuarios en su ruta
 cp ~/CSHD/source/csadduser.sh /etc/cshd/
