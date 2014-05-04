@@ -281,7 +281,7 @@ cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openv
 gzip -d /etc/openvpn/server.conf.gz
 
 #Editamos el archivo de configuracion
-perl -pi -e "s/cert server.crt/cert cshdserver.cert/g" /etc/openvpn/server.conf
+perl -pi -e "s/cert server.crt/cert cshdserver.crt/g" /etc/openvpn/server.conf
 perl -pi -e "s/key server.key/key cshdserver.key/g" /etc/openvpn/server.conf
 
 #Añadimos la directiva para habilitar el acceso a la VPN mediante contraseña
