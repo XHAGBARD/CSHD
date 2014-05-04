@@ -18,19 +18,19 @@ exit 1
 fi
 
 #Opcion de cambiar la contraseña de root
-echo  "Deseas cambiar la contraseña de root?"
-select yn in "Si" "No"; do
+
+while true; do
+    read -p "¿Deseas cambiar la contraseña de root?" yn
     case $yn in
-        Si ) passwd root;
-                if [ $? -gt 0 ]
-                        then
-                        echo Error en la operacion
-                        exit
-                                else
-                                break
-                        fi
-                        ;;
-        No ) break;;
+        [Ss]* ) passwd root;
+                if [ $? -gt 0 ]; then
+        echo
+        echo **** ERROR ****
+        echo
+        exit
+fi; break;;
+        [Nn]* ) break;;
+        * ) echo "Ss o Nn.";;
     esac
 done
 
