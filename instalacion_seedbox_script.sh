@@ -260,7 +260,7 @@ perl -pi -e "s/key client.key/cshdclient.key/g" ~/CSHD/ca/linux/client.conf
 
 #Creamos un zip de ambas carpetas
 zip ~/CSHD/ca/cliente_win.zip ~/CSHD/ca/windows/*
-tar -czfv ~/CSHD/ca/cliente_lin.tar.gz ~/CSHD/ca/linux/*
+tar -czvf ~/CSHD/ca/cliente_lin.tar.gz ~/CSHD/ca/linux/*
 
 #Movemos los archivos comprimidos a /var/www para que se lo puedan descargar los usuarios desde la web.
 mkdir /var/www/ca/
