@@ -181,7 +181,7 @@ echo "comment=CSHD Streaming" >> /etc/samba/smb.conf
 echo "path=/home/CSHD/" >> /etc/samba/smb.conf
 echo "public=yes" >> /etc/samba/smb.conf
 echo "writable=no" >> /etc/samba/smb.conf
-echo "browseable=yes" >> /etc(samba/smb.conf
+echo "browseable=yes" >> /etc/samba/smb.conf
 echo "readonly=yes" >> /etc/samba/smb.conf
 
 ##Fin SAMBA##
