@@ -59,10 +59,10 @@ debconf-set-selections <<< 'phpmyadmin phpmyadmin/reconfigure-webserver multisel
 #Añadimos Webmin al repositorio
 #Descargamos clave PGP
 cd /tmp
-sudo wget -t 5 http://www.webmin.com/jcameron-key.asc
+wget http://www.webmin.com/jcameron-key.asc
 
 #Añadimos la clave
-sudo apt-key add jcameron-key.asc
+apt-key add jcameron-key.asc
 
 #Añadimos la ruta al repositorio
 echo "deb http://download.webmin.com/download/repository sarge contrib" | sudo tee -a /etc/apt/sources.list
