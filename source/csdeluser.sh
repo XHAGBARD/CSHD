@@ -11,6 +11,7 @@ exit 1
 fi
 #Eliminamos al usuario
 userdel -r $1
-echo "El usuario $1 ha sido eliminado correctamente."
 #Eliminamos la cuenta del usuario en Samba
 smbpasswd -x $1
+
+echo "El usuario $1 ha sido eliminado correctamente."
