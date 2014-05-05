@@ -35,18 +35,46 @@ fi; break;;
 done
 
 #Almacenar la contraseña para MySQL
+cont=0
+while [ "$cont" = 0 ]; do
 echo Contraseña de root para MySQL:
-    read passmysql
+    read -s passmysql
+echo Repita la contraseña:
+    read -s passmysql2
 
+        if [ "$passmysql" != "$passmysql2" ]; then
+        clear
+        echo "ERROR: Contraseñas no coinciden"
+        else
+        cont=1
+        break
+        fi
+
+done
+
+cont=0
 #Almacenamos la contraseña para PhpMyAdmin
+while [ "$cont" = 0 ]; do
 echo Contraseña de root para PhpMyAdmin:
-    read passphpmyadmin
+    read -s passphpmyadmin
+echo Repita la contraseña:
+    read -s passphpmyadmin2
+
+        if [ "$passphpmyadmin" != "$passphpmyadmin2" ]; then
+        clear
+        echo "ERROR: Contraseñas no coinciden"
+        else
+        cont=1
+        break
+        fi
+
+done
 
 ##PUERTOS##
 #=========#
 
 #Puerto OpenVPN
-echo "Puerto OpenVPN [Por Defecto: 1194]: "
+echo -e -n "Puerto OpenVPN [Por Defecto: 1194]: "
 read puertovpn_pre
 if [ "$puertovpn_pre" = "" ]; then
 puertovpn=1194
@@ -55,7 +83,7 @@ puertovpn=$puertovpn_pre
 fi
 
 #Puerto SSH
-echo "Puerto SSH [Por Defecto: 21976]: "
+echo -e -n "Puerto SSH [Por Defecto: 21976]: "
 read puertossh_pre
 if [ "$puertossh_pre" = "" ]; then
 puertossh=21976
@@ -312,10 +340,11 @@ rm ~/CSHD/ca/cliente_win.zip
 rm ~/CSHD/ca/cliente_lin.tar.gz
 
 #Creamos un zip de ambas carpetas
-cd ~/CSHD/ca/
-zip ~/CSHD/ca/cliente_win.zip ./windows/*
-zip ~/CSHD/ca/cliente_android.zip ./windows/*
-tar -czvf ~/CSHD/ca/cliente_lin.tar.gz ./linux/*
+cd ~/CSHD/ca/windows
+zip ~/CSHD/ca/cliente_win.zip ./*
+zip ~/CSHD/ca/cliente_android.zip ./*
+cd ~/CSHD/ca/linux
+tar -czvf ~/CSHD/ca/cliente_lin.tar.gz ./*
 
 #Movemos los archivos comprimidos a /var/www para que se lo puedan descargar los usuarios desde la web.
 mkdir /var/www/ca/
@@ -404,6 +433,7 @@ service mysql restart
 ##Resultados##
 #============#
 nombre=$(uname -n)
+clear
 echo -e "\033[1mToda la configuración puedes visualizarla en /cshd.info\033[0m"
 echo " " | tee -a /cshd.info
 echo "CSHD Script - 2014 (c) http://github.com/XHAGBARD" | tee -a /cshd.info
