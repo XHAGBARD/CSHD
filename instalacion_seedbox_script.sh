@@ -53,6 +53,20 @@ debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/admin-pass password' $pa
 debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/app-pass password' $passmysql
 debconf-set-selections <<< 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
 
+##Instalación##
+#=============#
+
+#Añadimos Webmin al repositorio
+#Descargamos clave PGP
+cd /tmp
+sudo wget -t 5 http://www.webmin.com/jcameron-key.asc
+
+#Añadimos la clave
+sudo apt-key add jcameron-key.asc
+
+#Añadimos la ruta al repositorio
+echo "deb http://download.webmin.com/download/repository sarge contrib" | sudo tee -a /etc/apt/sources.list
+
 #Actualizacion de los repositorios#
 apt-get update
 
@@ -60,7 +74,7 @@ apt-get update
 apt-get -y upgrade
 
 #Instalacion de los paquetes necesarios para el servidor#
-apt-get install -y apache2 php5 php5-curl libapache2-mod-php5 mysql-client mysql-server phpmyadmin sendmail vsftpd lftp samba samba-common smbfs smbclient openvpn openssl openssh-server zip quota whois sudo makepasswd
+apt-get install -y apache2 php5 php5-curl libapache2-mod-php5 mysql-client mysql-server phpmyadmin sendmail vsftpd lftp samba samba-common smbfs smbclient openvpn openssl openssh-server zip quota whois sudo makepasswd webmin
 
 if [ $? -gt 0 ]; then
         echo
@@ -352,3 +366,31 @@ service vsftpd restart
 service apache2 restart
 service openvpn restart
 service mysql restart
+
+##Resultados##
+#============#
+nombre=$(uname -n)
+echo "Toda la configuración puedes visualizarla en /cshd.info"
+echo " "
+echo "#Resultados de la configuración"
+echo "Información del Sistema"
+echo "IP: $ip"
+echo "Nombre Equipo: $nombre"
+echo "Nombre del dominio: www.cinemascopehd.me"
+echo " "
+echo "Comandos Añadir/Eliminar usuarios localmente"
+echo "csadduser <usuario>"
+echo "csdeluser <usuario>"
+echo " Más Información: man csadduser y man csdeluser"
+echo " "
+echo "#Web"
+echo "Dirección web: www.cinemascopehd.me"
+echo "Administración Web: www.cinemascopehd.me/administrator"
+echo "Forzar Copia de Seguridad: http://www.cinemascopehd.me/index.php?option=com_akeeba&view=backup&key=copiaseguridad"
+echo " "
+echo "#VPN"
+echo "Configuración Windows: http://www.cinemascopehd.me/ca/cliente_win.zip"
+echo "Configuración Linux: http://www.cinemascopehd.me/ca/cliente_lin.tar.gz"
+echo "Conexión VPN: $ip"
+echo "Puerto: 1194"
+echo " "
