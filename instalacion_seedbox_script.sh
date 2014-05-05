@@ -312,9 +312,10 @@ rm ~/CSHD/ca/cliente_win.zip
 rm ~/CSHD/ca/cliente_lin.tar.gz
 
 #Creamos un zip de ambas carpetas
-zip ~/CSHD/ca/cliente_win.zip ~/CSHD/ca/windows/*
-zip ~/CSHD/ca/cliente_android.zip ~/CSHD/ca/windows/*
-tar -czvf ~/CSHD/ca/cliente_lin.tar.gz ~/CSHD/ca/linux/*
+cd ~/CSHD/ca/
+zip ~/CSHD/ca/cliente_win.zip ./windows/*
+zip ~/CSHD/ca/cliente_android.zip ./windows/*
+tar -czvf ~/CSHD/ca/cliente_lin.tar.gz ./linux/*
 
 #Movemos los archivos comprimidos a /var/www para que se lo puedan descargar los usuarios desde la web.
 mkdir /var/www/ca/
@@ -403,37 +404,41 @@ service mysql restart
 ##Resultados##
 #============#
 nombre=$(uname -n)
-echo "Toda la configuración puedes visualizarla en /cshd.info"
-echo " "
-echo "#Resultados de la configuración"
-echo "Información del Sistema"
-echo "IP: $ip"
-echo "Nombre Equipo: $nombre"
-echo "Nombre del dominio: www.cinemascopehd.me"
-echo " "
-echo "Comandos Añadir/Eliminar usuarios localmente"
-echo "csadduser <usuario>"
-echo "csdeluser <usuario>"
-echo " Más Información: man csadduser y man csdeluser"
-echo " "
-echo "#Web"
-echo "Dirección web: www.cinemascopehd.me"
-echo "Administración Web: www.cinemascopehd.me/administrator"
-echo "Forzar Copia de Seguridad: http://www.cinemascopehd.me/index.php?option=com_akeeba&view=backup&key=copiaseguridad"
-echo " "
-echo "#VPN"
-echo "Red: 10.8.0.0"
-echo "IP Local Equipo: 10.8.0.1"
-echo "Configuración Windows: http://www.cinemascopehd.me/ca/cliente_win.zip"
-echo "Configuración Linux: http://www.cinemascopehd.me/ca/cliente_lin.tar.gz"
-echo "Configuración Android: http://www.cinemascopehd.me/ca/cliente_android.zip"
-echo "Conexión VPN: $ip"
-echo "Puerto: $puertovpn"
-echo " "
-echo "#SSH"
-echo "Conexión: $ip"
-echo "Puerto: $puertossh"
-echo " "
-echo "#SAMBA"
-echo "Ruta: \\\\10.8.0.1\\cinemascopehd"
-echo "Cloud Personal: \\\\10.8.0.1\\<usuario>"
+echo -e "\033[1mToda la configuración puedes visualizarla en /cshd.info\033[0m"
+echo " " | tee -a /cshd.info
+echo "CSHD Script - 2014 (c) http://github.com/XHAGBARD" | tee -a /cshd.info
+echo "#Resultados de la configuración" | tee -a /cshd.info
+echo "Información del Sistema" | tee -a /cshd.info
+echo "IP: $ip" | tee -a /cshd.info
+echo "Nombre Equipo: $nombre" | tee -a /cshd.info
+echo "Nombre del dominio: www.cinemascopehd.me" | tee -a /cshd.info
+echo " " | tee -a /cshd.info
+echo "Comandos Añadir/Eliminar usuarios localmente" | tee -a /cshd.info
+echo "csadduser <usuario>" | tee -a /cshd.info
+echo "csdeluser <usuario>" | tee -a /cshd.info
+echo " Más Información: man csadduser y man csdeluser" | tee -a /cshd.info
+echo " " | tee -a /cshd.info
+echo "#Web" | tee -a /cshd.info
+echo "Dirección web: www.cinemascopehd.me" | tee -a /cshd.info
+echo "Administración Web: www.cinemascopehd.me/administrator" | tee -a /cshd.info
+echo "Forzar Copia de Seguridad: http://www.cinemascopehd.me/index.php?option=com_akeeba&view=backup&key=copiaseguridad" | tee -a /cshd.info
+echo " " | tee -a /cshd.info
+echo "#VPN" | tee -a /cshd.info
+echo "Red: 10.8.0.0" | tee -a /cshd.info
+echo "IP Local Equipo: 10.8.0.1" | tee -a /cshd.info
+echo "Configuración Windows: http://www.cinemascopehd.me/ca/cliente_win.zip" | tee -a /cshd.info
+echo "Configuración Linux: http://www.cinemascopehd.me/ca/cliente_lin.tar.gz" | tee -a /cshd.info
+echo "Configuración Android: http://www.cinemascopehd.me/ca/cliente_android.zip" | tee -a /cshd.info
+echo "Conexión VPN: $ip" | tee -a /cshd.info
+echo "Puerto: $puertovpn" | tee -a /cshd.info
+echo " " | tee -a /cshd.info
+echo "#SSH" | tee -a /cshd.info
+echo "Conexión: $ip" | tee -a /cshd.info
+echo "Puerto: $puertossh" | tee -a /cshd.info
+echo " " | tee -a /cshd.info
+echo "#SAMBA" | tee -a /cshd.info
+echo "Ruta: \\\\10.8.0.1\\cinemascopehd" | tee -a /cshd.info
+echo "Cloud Personal: \\\\10.8.0.1\\<usuario>" | tee -a /cshd.info
+echo " " | tee -a /cshd.info
+echo "#Webmin" | tee -a /cshd.info
+echo "Acceso: http://www.cinemascopehd.me:10000" | tee -a /cshd.info
