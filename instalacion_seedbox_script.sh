@@ -222,15 +222,16 @@ perl -pi -e "s/workgroup = WORKGROUP/workgroup = CINEMASCOPEHD/g" /etc/samba/smb
 perl -pi -e "s/server string = %h server (Samba, Ubuntu)/server string = %h Samba/g" /etc/samba/smb.conf
 
 #Habilitar el acceso al servidor desde las interfaces de la VPN
-perl -pi -e "s/';   interfaces = 127.0.0.0\/8 eth0'/'interfaces = 127.0.0.0\/8 eth0 10.8.0.0\/24 tun0'/g" /etc/samba/smb.conf
+perl -pi -e "s/;   interfaces = 127.0.0.0\/8 eth0/interfaces = 127.0.0.0\/8 eth0 10.8.0.0\/24 tun0/g" /etc/samba/smb.conf
 
 #Habilitar el acceso a los usuarios
 perl -pi -e "s/#   security = user/security = user/g" /etc/samba/smb.conf
 
 #Habilitar carpetas personales para el Cloud
-sed -i '295,328 s/\;\[homes\]/\[homes\]/g' /etc/samba/smb.conf
-sed -i '295,328 s/\;   comment = Home Directories/comment = Directorio Personal/g' /etc/samba/smb.conf
-sed -i '295,328 s/\;   browseable = no/browseable = yes/g' /etc/samba/smb.conf
+echo "" >> /etc/samba/smb.conf
+echo [homes] >> /etc/samba/smb.conf
+echo "comment = Directorio Personal" >> /etc/samba/smb.conf
+echo "browseable = yes/g' /etc/samba/smb.conf
 sed -i '295,328 s/\;   read only = yes/read only = no/g' /etc/samba/smb.conf
 sed -i '295,328 s/\;   create mask = 0700/create mask = 0700/g' /etc/samba/smb.conf
 sed -i '295,328 s/\;   directory mask = 0700/directory mask = 0700/g' /etc/samba/smb.conf
