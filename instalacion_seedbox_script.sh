@@ -5,7 +5,7 @@
 #
 ##################################################################
 #
-# Copyright (c) 2014 HAGBARD (https://github.com/XHAGBARD/)
+# Copyright (c) 2014  (https://github.com/XHAGBARD/)
 #
 # Script instalador de los servicios completos y necesarios para el funcionamiento del servidor de Streaming y Cloud
 #
@@ -109,7 +109,11 @@ echo "0 0 * * 1 root /etc/cshd/cpbbdd.sh" >> /etc/crontab
 ##SSH##
 #=====#
 #Copia de seguridad
+if [ -f /etc/ssh/sshd_config_bak ]; then
+
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config_bak
+
+fi
 
 #Cambiamos el puerto por defecto para mayor seguridad
 perl -pi -e "s/Port 22/Port 21976/g" /etc/ssh/sshd_config
@@ -125,7 +129,9 @@ perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 2048/g" /etc/ssh/sshd_config
 ##VSFTP##
 #======#
 #Copia de seguridad
+if [ -f /etc/vsftpd.conf_bak ]; then
 cp /etc/vsftpd.conf /etc/vsftpd.conf_bak
+fi
 
 #Habilitamos opción de escritura
 perl -pi -e "s/#write_enable=YES/write_enable=YES/g" /etc/vsftpd.conf
@@ -138,8 +144,9 @@ perl -pi -e "s/#ftpd_banner=Welcome to blah FTP service./ftpd_banner=Servidor Ci
 ##SAMBA##
 #=======#
 #Copia de seguridad
+if [ -f /etc/samba/smb.conf_bak ]; then
 cp /etc/samba/smb.conf /etc/samba/smb.conf_bak
-
+fi
 #Cambiar nombre del grupo de trabajo
 perl -pi -e "s/workgroup = WORKGROUP/workgroup = CINEMASCOPEHD/g" /etc/samba/smb.conf
 
@@ -188,6 +195,8 @@ echo "readonly=yes" >> /etc/samba/smb.conf
 
 ##OpenVPN##
 #=========#
+#Borramos cualquier configuracion previa
+rm -f -r /etc/openvpn/easy-rsa/
 #Configuramos y creamos las claves privadas y publicas del servidor VPN
 #Creamos la carpeta donde se almacenaran las claves
 mkdir /etc/openvpn/easy-rsa/
@@ -258,6 +267,10 @@ perl -pi -e "s/remote my-server-1 1194/remote $ip 1194/g" ~/CSHD/ca/linux/client
 perl -pi -e "s/cert client.cert/cshdclient.cert/g" ~/CSHD/ca/linux/client.conf
 perl -pi -e "s/key client.key/cshdclient.key/g" ~/CSHD/ca/linux/client.conf
 
+#Elminamos los archivos posibles que ya estén creados
+rm ~/CSHD/ca/cliente_win.zip
+rm ~/CSHD/ca/cliente_lin.tar.gz
+
 #Creamos un zip de ambas carpetas
 zip ~/CSHD/ca/cliente_win.zip ~/CSHD/ca/windows/*
 tar -czvf ~/CSHD/ca/cliente_lin.tar.gz ~/CSHD/ca/linux/*
@@ -268,8 +281,8 @@ mkdir /var/www/ca/
 #Damos permisos a www-data en la nueva carpeta
 chown www-data:www-data /var/www/ca
 chmod 755 /var/www/ca
-mv ~/CSHD/ca/cliente_win.zip /var/www/ca/
-mv ~/CSHD/ca/cliente_lin.tar.gz /var/www/ca/
+mv -f ~/CSHD/ca/cliente_win.zip /var/www/ca/
+mv -f ~/CSHD/ca/cliente_lin.tar.gz /var/www/ca/
 
 #Damos permisos 555 al archivo para su descarga
 chmod 555 /var/www/ca/cliente_win.zip
@@ -298,12 +311,14 @@ iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 
 ##QUOTAS##
 #========#
-#Añadimos al fstab las opciones para habilitar las quotas en el directorio /home
 #Copia de seguridad de fstab
+if [ -f /etc/fstab_bak ]; then
 cp /etc/fstab /etc/fstab_bak
+fi
+#Añadimos al fstab las opciones para habilitar las quotas en el directorio /home
 awk '$2~"^/home$"{$4="usrquota,grpquota,"$4}1' OFS="\t" /etc/fstab > /etc/fstab_pre
 cp /etc/fstab_pre /etc/fstab
-
+rm /etc/fstab_pre
 #Remontamos las unidades para efectuar los cambios
 mount -o remount /home
 
@@ -319,10 +334,10 @@ quotaon /home
 cp ~/CSHD/source/csadduser.sh /etc/cshd/
 cp ~/CSHD/source/csdeluser.sh /etc/cshd/
 #Creamos una entrada en bashrc para crear un alias al script
-echo "#Inicio Alias Personalizados" >> /etc/bash.bashrc
-echo "alias cshdadduser='sh /etc/cshd/csadduser.sh'" >> /etc/bash.bashrc
-echo "alias cshddeluser='sh /etc/cshd/csdeluser.sh'" >> /etc/bash.bashrc
-echo "#Fin Alias Personalizados" >> /etc/bash.bashrc
+echo "#Inicio Alias Personalizados" >> ~/.bashrc
+echo "alias csadduser='sh /etc/cshd/csadduser.sh'" >> ~/.bashrc
+echo "alias csdeluser='sh /etc/cshd/csdeluser.sh'" >> ~/.bashrc
+echo "#Fin Alias Personalizados" >> ~/.bashrc
 
 #Copiamos los manuales de ambos scripts
 cp ~/CSHD/source/csadduser.1 /usr/share/man/man1
