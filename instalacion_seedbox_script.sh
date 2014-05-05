@@ -41,7 +41,30 @@ echo Contraseña de root para MySQL:
 #Almacenamos la contraseña para PhpMyAdmin
 echo Contraseña de root para PhpMyAdmin:
     read passphpmyadmin
-    
+
+##PUERTOS##
+#=========#
+
+#Puerto OpenVPN
+echo "Puerto OpenVPN [Por Defecto: 1194]: "
+read puertovpn_pre
+if [ "$puertovpn_pre" = "" ]; then
+puertovpn=1194
+else
+puertovpn=$puertovpn_pre
+fi
+
+#Puerto SSH
+echo "Puerto SSH [Por Defecto: 21976]: "
+read puertossh_pre
+if [ "$puertossh_pre" = "" ]; then
+puertossh=21976
+else
+puertossh=$puertossh_pre
+fi
+
+#Fin PUERTOS
+
 #Almacenamos la contraseña de mysql en debconf para desatenderla del usuario.
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $passmysql"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $passmysql"
@@ -133,7 +156,7 @@ cp /etc/ssh/sshd_config /etc/ssh/sshd_config_bak
 fi
 
 #Cambiamos el puerto por defecto para mayor seguridad
-perl -pi -e "s/Port 22/Port 21976/g" /etc/ssh/sshd_config
+perl -pi -e "s/Port 22/Port $puertossh/g" /etc/ssh/sshd_config
 
 #Habilitamos la version 2
 perl -pi -e "s/\#Protocol 2/Protocol 2/g" /etc/ssh/sshd_config
@@ -260,7 +283,7 @@ ip=$(ip addr show eth0 | grep "inet " | sed "s/^.*inet //" | sed "s/\/.*$//" )
 touch ~/CSHD/ca/windows/client.ovpn
 echo "client" >> ~/CSHD/ca/windows/client.ovpn
 echo "remote $ip" >> ~/CSHD/ca/windows/client.ovpn
-echo "port 1194" >> ~/CSHD/ca/windows/client.ovpn
+echo "port $puertovpn" >> ~/CSHD/ca/windows/client.ovpn
 echo "proto udp" >> ~/CSHD/ca/windows/client.ovpn
 echo "dev tun" >> ~/CSHD/ca/windows/client.ovpn
 echo "dev-type tun" >> ~/CSHD/ca/windows/client.ovpn
@@ -273,14 +296,14 @@ echo "verb 3" >> ~/CSHD/ca/windows/client.ovpn
 echo "ca ca.crt" >> ~/CSHD/ca/windows/client.ovpn
 echo "cert cshdserver.crt" >> ~/CSHD/ca/windows/client.ovpn
 echo "key cshdserver.key" >> ~/CSHD/ca/windows/client.ovpn
-echo "management 127.0.0.1 1194" >> ~/CSHD/ca/windows/client.ovpn
+echo "management 127.0.0.1 $puertovpn" >> ~/CSHD/ca/windows/client.ovpn
 echo "management-hold" >> ~/CSHD/ca/windows/client.ovpn
 echo "management-query-passwords" >> ~/CSHD/ca/windows/client.ovpn
 echo "auth-retry interact" >> ~/CSHD/ca/windows/client.ovpn
 
 #Generamos el archivos de configuracion de Linux
 cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf ~/CSHD/ca/linux/
-perl -pi -e "s/remote my-server-1 1194/remote $ip 1194/g" ~/CSHD/ca/linux/client.conf
+perl -pi -e "s/remote my-server-1 1194/remote $ip $puertovpn/g" ~/CSHD/ca/linux/client.conf
 perl -pi -e "s/cert client.cert/cshdclient.cert/g" ~/CSHD/ca/linux/client.conf
 perl -pi -e "s/key client.key/cshdclient.key/g" ~/CSHD/ca/linux/client.conf
 
@@ -405,11 +428,11 @@ echo "Configuración Windows: http://www.cinemascopehd.me/ca/cliente_win.zip"
 echo "Configuración Linux: http://www.cinemascopehd.me/ca/cliente_lin.tar.gz"
 echo "Configuración Android: http://www.cinemascopehd.me/ca/cliente_android.zip"
 echo "Conexión VPN: $ip"
-echo "Puerto: 1194"
+echo "Puerto: $puertovpn"
 echo " "
 echo "#SSH"
 echo "Conexión: $ip"
-echo "Puerto: 21976"
+echo "Puerto: $puertossh"
 echo " "
 echo "#SAMBA"
 echo "Ruta: \\\\10.8.0.1\\cinemascopehd"
