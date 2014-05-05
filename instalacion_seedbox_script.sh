@@ -115,6 +115,9 @@ cp ~/CSHD/source/ioncube_loader_lin_5.3.so /usr/lib/php5/20090626/
 touch /etc/cshd/cpbbdd.sh
 echo "wget --max-redirect=10000 'http://www.cinemascopehd.me/index.php?option=com_akeeba&view=backup&key=copiaseguridad'" >> /etc/cshd/cpbbdd.sh
 
+#Asignamos permisos de ejecución
+chmod +x /etc/cshd/cpbbdd.sh
+
 #Programamos cron para iniciar la copia semanalmente los lunes a la madrugada
 echo "0 0 * * 1 root /etc/cshd/cpbbdd.sh" >> /etc/crontab
 
@@ -349,6 +352,11 @@ quotaon /home
 #Copiamos los archivos de añadir y eliminar usuarios en su ruta
 cp ~/CSHD/source/csadduser.sh /etc/cshd/
 cp ~/CSHD/source/csdeluser.sh /etc/cshd/
+
+#Asignamos permisos de ejecución
+chmod +x /etc/cshd/csadduser.sh
+chmod +x /etc/cshd/csdeluser.sh
+
 #Creamos una entrada en bashrc para crear un alias al script
 echo "#Inicio Alias Personalizados" >> ~/.bashrc
 echo "alias csadduser='sh /etc/cshd/csadduser.sh'" >> ~/.bashrc
