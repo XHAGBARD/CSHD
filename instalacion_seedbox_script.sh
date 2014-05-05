@@ -133,7 +133,7 @@ fi
 perl -pi -e "s/Port 22/Port 21976/g" /etc/ssh/sshd_config
 
 #Habilitamos la version 2
-perl -pi -e "s/#Protocol 2/Protocol 2/g" /etc/ssh/sshd_config
+perl -pi -e "s/\#Protocol 2/Protocol 2/g" /etc/ssh/sshd_config
 
 #Ampliamos la seguridad a 2048Bits
 perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 2048/g" /etc/ssh/sshd_config
@@ -148,10 +148,10 @@ cp /etc/vsftpd.conf /etc/vsftpd.conf_bak
 fi
 
 #Habilitamos opción de escritura
-perl -pi -e "s/#write_enable=YES/write_enable=YES/g" /etc/vsftpd.conf
+perl -pi -e "s/\#write_enable=YES/write_enable=YES/g" /etc/vsftpd.conf
 
 #Cambiamos y habilitamos el mensaje de bienvenida del servidor FTP
-perl -pi -e "s/#ftpd_banner=Welcome to blah FTP service./ftpd_banner=Servidor CinemaScopeHD FTP/g" /etc/vsftpd.conf
+perl -pi -e "s/\#ftpd_banner=Welcome to blah FTP service./ftpd_banner=Servidor CinemaScopeHD FTP/g" /etc/vsftpd.conf
 
 ##Fin VSFTP##
 
@@ -168,19 +168,19 @@ perl -pi -e "s/workgroup = WORKGROUP/workgroup = CINEMASCOPEHD/g" /etc/samba/smb
 perl -pi -e "s/server string = %h server (Samba, Ubuntu)/server string = %h Samba/g" /etc/samba/smb.conf
 
 #Habilitar el acceso al servidor desde las interfaces de la VPN
-perl -pi -e "s/;   interfaces = 127.0.0.0/8 eth0/interfaces = 127.0.0.0/8 eth0 10.8.0.0/24 tun0/g" /etc/samba/smb.conf
+perl -pi -e "s/';   interfaces = 127.0.0.0\/8 eth0'/'interfaces = 127.0.0.0\/8 eth0 10.8.0.0\/24 tun0'/g" /etc/samba/smb.conf
 
 #Habilitar el acceso a los usuarios
 perl -pi -e "s/#   security = user/security = user/g" /etc/samba/smb.conf
 
 #Habilitar carpetas personales para el Cloud
-perl -pi -e "s/;[homes]/[homes]/g" /etc/samba/smb.conf
-perl -pi -e "s/;   comment = Home Directories/comment = Directorio Personal/g" /etc/samba/smb.conf
-sed -i '295,328 s/;   browseable = no/browseable = yes/g' /etc/samba/smb.conf
-sed -i '295,328 s/;   read only = yes/read only = no/g' /etc/samba/smb.conf
-sed -i '295,328 s/;   create mask = 0700/create mask = 0700/g' /etc/samba/smb.conf
-sed -i '295,328 s/;   directory mask = 0700/directory mask = 0700/g' /etc/samba/smb.conf
-sed -i '295,328 s/;   valid users = %S/valid users = %U/g' /etc/samba/smb.conf
+sed -i '295,328 s/\;\[homes\]/\[homes\]/g' /etc/samba/smb.conf
+sed -i '295,328 s/\;   comment = Home Directories/comment = Directorio Personal/g' /etc/samba/smb.conf
+sed -i '295,328 s/\;   browseable = no/browseable = yes/g' /etc/samba/smb.conf
+sed -i '295,328 s/\;   read only = yes/read only = no/g' /etc/samba/smb.conf
+sed -i '295,328 s/\;   create mask = 0700/create mask = 0700/g' /etc/samba/smb.conf
+sed -i '295,328 s/\;   directory mask = 0700/directory mask = 0700/g' /etc/samba/smb.conf
+sed -i '295,328 s/\;   valid users = %S/valid users = %U/g' /etc/samba/smb.conf
 
 #Añadimos directivas para mejorar la velocidad en la VPN
 sed -i '66i\### Rendimiento ###' /etc/samba/smb.conf
