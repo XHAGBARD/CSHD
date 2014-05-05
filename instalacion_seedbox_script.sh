@@ -474,5 +474,5 @@ echo "#Webmin" | tee -a /cshd.info
 echo "Acceso: http://www.cinemascopehd.me:10000" | tee -a /cshd.info
 echo " "
 echo "***REINICIANDO SERVICIO SSH***"
-echo "Es muy posible que tengas que voelver a conectarte al nuevo puerto configurado"
+echo "Es muy posible que tengas que volver a conectarte al nuevo puerto configurado"
 service sshd restart
