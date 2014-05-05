@@ -43,14 +43,14 @@ echo Contraseña de root para PhpMyAdmin:
     read passphpmyadmin
     
 #Almacenamos la contraseña de mysql en debconf para desatenderla del usuario.
-debconf-set-selections <<< 'mysql-server mysql-server/root_password password' $passmysql
-debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password' $passmysql
+debconf-set-selections <<< "mysql-server mysql-server/root_password password $passmysql"
+debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $passmysql"
 
 #Almacenamos la contraseña de phpmyadmin en debconf para desatenderla del usuario.
 debconf-set-selections <<< 'phpmyadmin phpmyadmin/dbconfig-install boolean true'
-debconf-set-selections <<< 'phpmyadmin phpmyadmin/app-password-confirm password' $passphpmyadmin
-debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/admin-pass password' $passmysql
-debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/app-pass password' $passmysql
+debconf-set-selections <<< "phpmyadmin phpmyadmin/app-password-confirm password $passphpmyadmin"
+debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-pass password $passmysql"
+debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $passmysql"
 debconf-set-selections <<< 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
 
 ##Instalación##
