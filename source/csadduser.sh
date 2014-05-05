@@ -15,6 +15,12 @@ mes=$[$(date +%m)+1]
 
 #Creamos el usuario con sus opciones
 useradd -d /home/$1 -e $(date +%d/$mes/%Y) -g 1221 -m -s /bin/false $1
+if [ $? -gt 0 ]; then
+  echo
+  echo "*** ERROR ***
+  echo
+  exit 
+fi
 passwd $1
 
 #Añadimos al usuario en Samba
