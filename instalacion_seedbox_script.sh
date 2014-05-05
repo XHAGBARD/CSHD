@@ -287,6 +287,7 @@ rm ~/CSHD/ca/cliente_lin.tar.gz
 
 #Creamos un zip de ambas carpetas
 zip ~/CSHD/ca/cliente_win.zip ~/CSHD/ca/windows/*
+zip ~/CSHD/ca/cliente_android.zip ~/CSHD/ca/windows/*
 tar -czvf ~/CSHD/ca/cliente_lin.tar.gz ~/CSHD/ca/linux/*
 
 #Movemos los archivos comprimidos a /var/www para que se lo puedan descargar los usuarios desde la web.
@@ -297,6 +298,7 @@ chown www-data:www-data /var/www/ca
 chmod 755 /var/www/ca
 mv -f ~/CSHD/ca/cliente_win.zip /var/www/ca/
 mv -f ~/CSHD/ca/cliente_lin.tar.gz /var/www/ca/
+mv -f ~/CSHD/ca/cliente_android.zip /var/www/ca/
 
 #Damos permisos 555 al archivo para su descarga
 chmod 555 /var/www/ca/cliente_win.zip
@@ -389,8 +391,18 @@ echo "Administración Web: www.cinemascopehd.me/administrator"
 echo "Forzar Copia de Seguridad: http://www.cinemascopehd.me/index.php?option=com_akeeba&view=backup&key=copiaseguridad"
 echo " "
 echo "#VPN"
+echo "Red: 10.8.0.0"
+echo "IP Local Equipo: 10.8.0.1"
 echo "Configuración Windows: http://www.cinemascopehd.me/ca/cliente_win.zip"
 echo "Configuración Linux: http://www.cinemascopehd.me/ca/cliente_lin.tar.gz"
+echo "Configuración Android: http://www.cinemascopehd.me/ca/cliente_android.zip"
 echo "Conexión VPN: $ip"
 echo "Puerto: 1194"
 echo " "
+echo "#SSH"
+echo "Conexión: $ip"
+echo "Puerto: 21976"
+echo " "
+echo "#SAMBA"
+echo "Ruta: \\\\10.8.0.1\cinemascopehd"
+echo "Cloud Personal: \\\\10.8.0.1\<usuario>"
