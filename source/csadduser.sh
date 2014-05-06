@@ -17,7 +17,7 @@ mes=$[$(date +%m)+1]
 useradd -d /home/$1 -e $(date +%d/$mes/%Y) -g 1221 -m -s /bin/false $1
 if [ $? -gt 0 ]; then
   echo
-  echo "*** ERROR ***
+  echo "*** ERROR ***"
   echo
   exit 
 fi
