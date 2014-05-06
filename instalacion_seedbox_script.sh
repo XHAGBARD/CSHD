@@ -258,7 +258,7 @@ sed -i '76i\socket options = TCP_NODELAY SO_SNDBUF=65535 SO_RCVBUF=65535' /etc/s
 sed -i '77i\ ' /etc/samba/smb.conf
 
 #Creación de la carpeta compartida para todos los usuarios
-echo "[CinemaScopeHD]" >> /etc/samba/smb.conf
+echo "[cinemascopehd]" >> /etc/samba/smb.conf
 echo "comment=CSHD Streaming" >> /etc/samba/smb.conf
 echo "path=/home/CSHD/" >> /etc/samba/smb.conf
 echo "public=yes" >> /etc/samba/smb.conf
