@@ -177,7 +177,7 @@ echo "0 0 * * 1 root /etc/cshd/cpbbdd.sh" >> /etc/crontab
 ##SSH##
 #=====#
 #Copia de seguridad
-if [ -f /etc/ssh/sshd_config_bak ]; then
+if [ !-f /etc/ssh/sshd_config_bak ]; then
 
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config_bak
 
@@ -197,7 +197,7 @@ perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 2048/g" /etc/ssh/sshd_config
 ##VSFTP##
 #======#
 #Copia de seguridad
-if [ -f /etc/vsftpd.conf_bak ]; then
+if [ !-f /etc/vsftpd.conf_bak ]; then
 cp /etc/vsftpd.conf /etc/vsftpd.conf_bak
 fi
 
@@ -212,7 +212,7 @@ perl -pi -e "s/\#ftpd_banner=Welcome to blah FTP service./ftpd_banner=Servidor C
 ##SAMBA##
 #=======#
 #Copia de seguridad
-if [ -f /etc/samba/smb.conf_bak ]; then
+if [ !-f /etc/samba/smb.conf_bak ]; then
 cp /etc/samba/smb.conf /etc/samba/smb.conf_bak
 fi
 #Cambiar nombre del grupo de trabajo
@@ -228,14 +228,15 @@ perl -pi -e "s/;   interfaces = 127.0.0.0\/8 eth0/interfaces = 127.0.0.0\/8 eth0
 perl -pi -e "s/#   security = user/security = user/g" /etc/samba/smb.conf
 
 #Habilitar carpetas personales para el Cloud
-echo "" >> /etc/samba/smb.conf
-echo [homes] >> /etc/samba/smb.conf
+echo " " >> /etc/samba/smb.conf
+echo "[homes]" >> /etc/samba/smb.conf
 echo "comment = Directorio Personal" >> /etc/samba/smb.conf
-echo "browseable = yes/g' /etc/samba/smb.conf
-sed -i '295,328 s/\;   read only = yes/read only = no/g' /etc/samba/smb.conf
-sed -i '295,328 s/\;   create mask = 0700/create mask = 0700/g' /etc/samba/smb.conf
-sed -i '295,328 s/\;   directory mask = 0700/directory mask = 0700/g' /etc/samba/smb.conf
-sed -i '295,328 s/\;   valid users = %S/valid users = %U/g' /etc/samba/smb.conf
+echo "browseable = yes" >> /etc/samba/smb.conf
+echo "read only = no" >> /etc/samba/smb.conf
+echo "create mask = 0700" >> /etc/samba/smb.conf
+echo "directory mask = 0700" >> /etc/samba/smb.conf
+echo "valid users = %U" >> /etc/samba/smb.conf
+echo " " >> /etc/samba/smb.conf
 
 #Añadimos directivas para mejorar la velocidad en la VPN
 sed -i '66i\### Rendimiento ###' /etc/samba/smb.conf
