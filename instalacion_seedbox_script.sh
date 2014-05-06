@@ -329,8 +329,8 @@ echo "auth-retry interact" >> ~/CSHD/ca/windows/client.ovpn
 echo "comp-lzo yes" >> ~/CSHD/ca/windows/client.ovpn
 echo "verb 3" >> ~/CSHD/ca/windows/client.ovpn
 echo "ca ca.crt" >> ~/CSHD/ca/windows/client.ovpn
-echo "cert cshdserver.crt" >> ~/CSHD/ca/windows/client.ovpn
-echo "key cshdserver.key" >> ~/CSHD/ca/windows/client.ovpn
+echo "cert cshdcliente.crt" >> ~/CSHD/ca/windows/client.ovpn
+echo "key cshdcliente.key" >> ~/CSHD/ca/windows/client.ovpn
 echo "management 127.0.0.1 $puertovpn" >> ~/CSHD/ca/windows/client.ovpn
 echo "management-hold" >> ~/CSHD/ca/windows/client.ovpn
 echo "management-query-passwords" >> ~/CSHD/ca/windows/client.ovpn
@@ -339,8 +339,8 @@ echo "auth-retry interact" >> ~/CSHD/ca/windows/client.ovpn
 #Generamos el archivos de configuracion de Linux
 cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf ~/CSHD/ca/linux/
 perl -pi -e "s/remote my-server-1 1194/remote $ip $puertovpn/g" ~/CSHD/ca/linux/client.conf
-perl -pi -e "s/cert client.cert/cshdclient.cert/g" ~/CSHD/ca/linux/client.conf
-perl -pi -e "s/key client.key/cshdclient.key/g" ~/CSHD/ca/linux/client.conf
+perl -pi -e "s/cert client.cert/cshdcliente.cert/g" ~/CSHD/ca/linux/client.conf
+perl -pi -e "s/key client.key/cshdcliente.key/g" ~/CSHD/ca/linux/client.conf
 
 #Elminamos los archivos posibles que ya estén creados
 rm ~/CSHD/ca/cliente_win.zip
