@@ -477,4 +477,4 @@ echo "Acceso: http://www.cinemascopehd.me:10000" | tee -a /cshd.info
 echo " "
 echo "***REINICIANDO SERVICIO SSH***"
 echo "Es muy posible que tengas que volver a conectarte al nuevo puerto configurado"
-service sshd restart
+service ssh restart
