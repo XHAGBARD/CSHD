@@ -177,8 +177,9 @@ echo "0 0 * * 1 root /etc/cshd/cpbbdd.sh" >> /etc/crontab
 ##SSH##
 #=====#
 #Copia de seguridad
-if [ !-f /etc/ssh/sshd_config_bak ]; then
-
+if [ -f /etc/ssh/sshd_config_bak ]; then
+continue
+else
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config_bak
 
 fi
@@ -197,7 +198,9 @@ perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 2048/g" /etc/ssh/sshd_config
 ##VSFTP##
 #======#
 #Copia de seguridad
-if [ !-f /etc/vsftpd.conf_bak ]; then
+if [ -f /etc/vsftpd.conf_bak ]; then
+continue
+else
 cp /etc/vsftpd.conf /etc/vsftpd.conf_bak
 fi
 
@@ -212,7 +215,9 @@ perl -pi -e "s/\#ftpd_banner=Welcome to blah FTP service./ftpd_banner=Servidor C
 ##SAMBA##
 #=======#
 #Copia de seguridad
-if [ !-f /etc/samba/smb.conf_bak ]; then
+if [ -f /etc/samba/smb.conf_bak ]; then
+continue
+else
 cp /etc/samba/smb.conf /etc/samba/smb.conf_bak
 fi
 #Cambiar nombre del grupo de trabajo
@@ -387,6 +392,8 @@ iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 #========#
 #Copia de seguridad de fstab
 if [ -f /etc/fstab_bak ]; then
+continue
+else
 cp /etc/fstab /etc/fstab_bak
 fi
 #Añadimos al fstab las opciones para habilitar las quotas en el directorio /home
