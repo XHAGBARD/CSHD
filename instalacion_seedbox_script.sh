@@ -45,7 +45,6 @@ echo Repita la contraseña:
 
         if [ "$pass" != "$pass2" ]; then
         clear
-        echo "ERROR: Contraseñas no coinciden"
         else
         cont=1
         break
@@ -158,14 +157,20 @@ cp ~/CSHD/source/ioncube_loader_lin_5.3.so /usr/lib/php5/20090626/
 #====================#
 
 #Programamos copia de seguridad para la BBDD
-touch /etc/cshd/cpbbdd.sh
-echo "wget --max-redirect=10000 'http://www.cinemascopehd.me/index.php?option=com_akeeba&view=backup&key=copiaseguridad'" >> /etc/cshd/cpbbdd.sh
+#Creamos el script
+touch /etc/cshd/cps.sh
+echo "#!/bin/bash" >> /etc/cshd/cps.sh
+echo "date=$(date +%d%b%Y)" >> /etc/cshd/cps.sh
+echo "tar -jvcf /etc/cshd/bakup/www-$date.tar.bz2 /var/www/" >> /etc/cshd/cps.sh
+echo "mysqldump -u$csid -p$pass -r/home/cshd/mysql_joomla-$date.sql joomla" >> /etc/cshd/cps.sh
+echo "mysqldump -u$csid -p$pass -r/home/cshd/mysql_phpbb3-$date.sql joomla_phpBB3" >> /etc/cshd/cps.sh
+
 
 #Asignamos permisos de ejecución
-chmod +x /etc/cshd/cpbbdd.sh
+chmod +x /etc/cshd/cps.sh
 
 #Programamos cron para iniciar la copia semanalmente los lunes a la madrugada
-echo "0 0 * * 1 root /etc/cshd/cpbbdd.sh" >> /etc/crontab
+echo "0 0 * * 1 root /etc/cshd/cps.sh" >> /etc/crontab
 
 ##Fin Copia de Seguridad##
 
