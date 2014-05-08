@@ -186,8 +186,8 @@ echo "setquota -u $1 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
 #Creamos el script
 touch /etc/cshd/cps.sh
 echo "#!/bin/bash" >> /etc/cshd/cps.sh
-echo "date=$(date +%d%b%Y)" >> /etc/cshd/cps.sh
-echo "tar -jvcf /etc/cshd/bakup/www-$date.tar.bz2 /var/www/" >> /etc/cshd/cps.sh
+echo 'date=$(date +%d%b%Y)' >> /etc/cshd/cps.sh
+echo 'tar -jvcf /etc/cshd/bakup/www-$date.tar.bz2 /var/www/' >> /etc/cshd/cps.sh
 echo "mysqldump -u$csid -p$pass -r/home/cshd/mysql_joomla-$date.sql joomla" >> /etc/cshd/cps.sh
 echo "mysqldump -u$csid -p$pass -r/home/cshd/mysql_phpbb3-$date.sql joomla_phpBB3" >> /etc/cshd/cps.sh
 
