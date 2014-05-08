@@ -16,33 +16,34 @@ if [ "`id -u`" != 0 ] ; then
 echo "ERROR: Necesitas tener permisos de root para ejecutar el script."
 exit 1
 fi
-
+#@VARIABLES##
+#===========#
 #Opcion de cambiar la contraseña de root
 
-while true; do
-    read -p "¿Deseas cambiar la contraseña de root?" yn
-    case $yn in
-        [Ss]* ) passwd root;
-                if [ $? -gt 0 ]; then
-        echo
-        echo "**** ERROR ****"
-        echo
-        exit
-fi; break;;
-        [Nn]* ) break;;
-        * ) echo "Ss o Nn.";;
-    esac
-done
+#while true; do
+#    read -p "¿Deseas cambiar la contraseña de root?" yn
+#    case $yn in
+#        [Ss]* ) passwd root;
+#                if [ $? -gt 0 ]; then
+#        echo
+#        echo "**** ERROR ****"
+#        echo
+#        exit
+#fi; break;;
+#        [Nn]* ) break;;
+#        * ) echo "Ss o Nn.";;
+#    esac
+#done
 
-#Almacenar la contraseña para MySQL
+#Almacenar contraseña
 cont=0
 while [ "$cont" = 0 ]; do
-echo Contraseña de root para MySQL:
-    read -s passmysql
+echo Contraseña de root:
+    read -s pass
 echo Repita la contraseña:
-    read -s passmysql2
+    read -s pass2
 
-        if [ "$passmysql" != "$passmysql2" ]; then
+        if [ "$pass" != "$pass2" ]; then
         clear
         echo "ERROR: Contraseñas no coinciden"
         else
@@ -52,23 +53,17 @@ echo Repita la contraseña:
 
 done
 
-cont=0
-#Almacenamos la contraseña para PhpMyAdmin
-while [ "$cont" = 0 ]; do
-echo Contraseña de root para PhpMyAdmin:
-    read -s passphpmyadmin
-echo Repita la contraseña:
-    read -s passphpmyadmin2
+#Cambiamos la contraseña de root
+(echo $pass; echo $pass) | passwd root
 
-        if [ "$passphpmyadmin" != "$passphpmyadmin2" ]; then
-        clear
-        echo "ERROR: Contraseñas no coinciden"
-        else
-        cont=1
-        break
-        fi
+#Recogemos nombre de root
+csid=$(id -nu)
 
-done
+#Recogemos el nombre del equipo
+nombre=$(uname -n)
+
+#Recogemos la ip del sistema
+ip=$(ip addr show eth0 | grep "inet " | sed "s/^.*inet //" | sed "s/\/.*$//" )
 
 ##PUERTOS##
 #=========#
@@ -94,14 +89,14 @@ fi
 #Fin PUERTOS
 
 #Almacenamos la contraseña de mysql en debconf para desatenderla del usuario.
-debconf-set-selections <<< "mysql-server mysql-server/root_password password $passmysql"
-debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $passmysql"
+debconf-set-selections <<< "mysql-server mysql-server/root_password password $pass"
+debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $pass"
 
 #Almacenamos la contraseña de phpmyadmin en debconf para desatenderla del usuario.
 debconf-set-selections <<< 'phpmyadmin phpmyadmin/dbconfig-install boolean true'
-debconf-set-selections <<< "phpmyadmin phpmyadmin/app-password-confirm password $passphpmyadmin"
-debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-pass password $passmysql"
-debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $passmysql"
+debconf-set-selections <<< "phpmyadmin phpmyadmin/app-password-confirm password $pass"
+debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-pass password $pass"
+debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $pass"
 debconf-set-selections <<< 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
 
 ##Instalación##
@@ -190,8 +185,8 @@ perl -pi -e "s/Port 22/Port $puertossh/g" /etc/ssh/sshd_config
 #Habilitamos la version 2
 perl -pi -e "s/\#Protocol 2/Protocol 2/g" /etc/ssh/sshd_config
 
-#Ampliamos la seguridad a 2048Bits
-perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 2048/g" /etc/ssh/sshd_config
+#Ampliamos la seguridad a 1024
+perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 1024/g" /etc/ssh/sshd_config
 
 ##Fin SSH##
 
@@ -311,9 +306,6 @@ cp ca.crt cshdcliente.crt cshdcliente.key ~/CSHD/ca/windows/
 cp ca.crt cshdcliente.crt cshdcliente.key ~/CSHD/ca/linux
 
 #Generamos los archivos de configuracion de la VPN para ambos clientes, Windows y Linux
-#Extraemos la ip publica para generar los archivos de configuracion
-ip=$(ip addr show eth0 | grep "inet " | sed "s/^.*inet //" | sed "s/\/.*$//" )
-
 #Configuracion cliente Windows
 touch ~/CSHD/ca/windows/client.ovpn
 echo "client" >> ~/CSHD/ca/windows/client.ovpn
@@ -437,6 +429,7 @@ source /etc/bash.bashrc
 #Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd y smbpasswd
 echo " " >> /etc/sudoers
 echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd, /usr/sbin/setquota" >> /etc/sudoers
+
 #Modificamos el php.ini para eliminar la restriccion de "exec"
 sed -i '/,pcntl_exec/d' /etc/php5/apache2/php.ini
 
@@ -462,7 +455,6 @@ service mysql restart
 
 ##Resultados##
 #============#
-nombre=$(uname -n)
 clear
 echo -e "\033[1mToda la configuración puedes visualizarla en /cshd.info\033[0m"
 echo " " | tee -a /cshd.info
@@ -502,6 +494,10 @@ echo "Cloud Personal: \\\\10.8.0.1\\<usuario>" | tee -a /cshd.info
 echo " " | tee -a /cshd.info
 echo "#Webmin" | tee -a /cshd.info
 echo "Acceso: http://www.cinemascopehd.me:10000" | tee -a /cshd.info
+echo " "| tee -a /cshd.info
+echo "Datos de Acceso" | tee -a /cshd.info
+echo "username: $csid" | tee -a /cshd.info
+echo "contraseña: $pass" | tee -a /cshd.info
 echo " "
 echo "***REINICIANDO SERVICIO SSH***"
 echo "Es muy posible que tengas que volver a conectarte al nuevo puerto configurado"
