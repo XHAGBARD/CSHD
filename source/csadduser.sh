@@ -14,17 +14,16 @@ fi
 mes=$[$(date +%m)+1]
 
 #Creamos el usuario con sus opciones
-useradd -d /home/$1 -e $(date +%d/$mes/%Y) -g 1221 -m -s /bin/false $1
+useradd -d /home/$1 -e $(date +%d/$mes/%Y) -g 1221 -m -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1
 if [ $? -gt 0 ]; then
   echo
   echo "*** ERROR ***"
   echo
   exit 
 fi
-passwd $1
 
 #Añadimos al usuario en Samba
-smbpasswd -a $1
+(echo $2; echo $2) | sudo smbpasswd -s -a -U $1
 
 #Habilitamos las quotas en /home para el Cloud
 setquota -u $1 1457280 30000000 0 0 /home
