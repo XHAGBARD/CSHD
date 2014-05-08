@@ -309,6 +309,8 @@ mkdir /etc/openvpn/easy-rsa/
 #Copiamos  las claves de ejemplo que vienen por defecto a nuestra nueva carpeta
 cp -r /usr/share/doc/openvpn/examples/easy-rsa/2.0/* /etc/openvpn/easy-rsa/
 
+#Modificamos el vars para globalizar los cambios a un mismo formato
+
 #Generamos el Master CA
 cd /etc/openvpn/easy-rsa/
 ln -s openssl-* openssl.cnf
@@ -404,7 +406,7 @@ perl -pi -e "s/cert server.crt/cert cshdserver.crt/g" /etc/openvpn/server.conf
 perl -pi -e "s/key server.key/key cshdserver.key/g" /etc/openvpn/server.conf
 
 #Añadimos la directiva para habilitar el acceso a la VPN mediante contraseña
-echo "plugin /usr/lib/openvpn/openvpn-auth-pam.so login" >> /etc/openvpn/server.conf
+echo "plugin /usr/lib/openvpn/openvpn-auth-pam.so common-auth" >> /etc/openvpn/server.conf
 
 #Configuracion del servicio de transporte en la tarjeta de red
 #Habilitamos la comuniacion entre ambas redes
