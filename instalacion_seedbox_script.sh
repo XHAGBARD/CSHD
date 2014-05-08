@@ -461,7 +461,7 @@ cp ~/CSHD/source/csadduser.1 /usr/share/man/man1
 cp ~/CSHD/source/csdeluser.1 /usr/share/man/man1
 
 #Cargamos los sources
-source /etc/bash.bashrc
+source ~/.bashrc
 
 #Reiniciamos servicios
 service smbd restart
