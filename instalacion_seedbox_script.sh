@@ -238,6 +238,10 @@ perl -pi -e "s/\#ftpd_banner=Welcome to blah FTP service./ftpd_banner=Servidor C
 
 ##Fin VSFTP##
 
+##LFTP##
+#======#
+
+
 ##SAMBA##
 #=======#
 #Copia de seguridad
@@ -419,10 +423,12 @@ continue
 else
 cp /etc/fstab /etc/fstab_bak
 fi
+
 #Añadimos al fstab las opciones para habilitar las quotas en el directorio /home
 awk '$2~"^/home$"{$4="usrquota,grpquota,"$4}1' OFS="\t" /etc/fstab > /etc/fstab_pre
 cp /etc/fstab_pre /etc/fstab
 rm /etc/fstab_pre
+
 #Remontamos las unidades para efectuar los cambios
 mount -o remount /home
 
