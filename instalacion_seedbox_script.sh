@@ -135,6 +135,9 @@ groupadd -g 1221 usuarios
 #Creamos carpeta para usarla posteriormente
 mkdir /etc/cshd/
 
+#Creamos carpeta para los backups
+mkdir /etc/cshd/backup
+
 ##Apache2##
 #========#
 #Activacion modulo mod_rewrite
@@ -156,7 +159,7 @@ cp ~/CSHD/source/ioncube_loader_lin_5.3.so /usr/lib/php5/20090626/
 
 ##Permisos para www-data##
 #========================#
-#Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd y smbpasswd
+#Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd, smbpasswd, mkpasswd y setquota
 echo " " >> /etc/sudoers
 echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd, /usr/sbin/setquota" >> /etc/sudoers
 
