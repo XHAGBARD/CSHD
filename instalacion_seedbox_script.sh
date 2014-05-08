@@ -436,7 +436,7 @@ source /etc/bash.bashrc
 #========================#
 #Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd y smbpasswd
 echo " " >> /etc/sudoers
-echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd" >> /etc/sudoers
+echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd, /usr/sbin/setquota" >> /etc/sudoers
 #Modificamos el php.ini para eliminar la restriccion de "exec"
 sed -i '/,pcntl_exec/d' /etc/php5/apache2/php.ini
 
@@ -447,9 +447,10 @@ chmod +x /var/www/csexec.sh
 chown www-data:www-data csexec.sh
 
 #Script
-echo "!#/bin/bash" >> /var/www/csexec.sh
-echo "sudo useradd -m -s /bin/false -p $(mkpasswd --hash=SHA-512 $data['password_clear']) $data['username']"
-echo "(echo "$data['password_clear']"; echo "$data['password_clear']") | sudo smbpasswd -s -a -U $data['username']"
+echo "#!/bin/bash" >> /var/www/csexec.sh
+echo "sudo useradd -m -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1"
+echo "(echo $2; echo $2) | sudo smbpasswd -s -a -U $1"
+echo "setquota -u $data['username'] 1457280 30000000 0 0 /home"
 
 #Reiniciamos servicios
 service smbd restart
