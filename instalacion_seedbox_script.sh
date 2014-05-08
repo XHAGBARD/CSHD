@@ -18,6 +18,7 @@ exit 1
 fi
 #@VARIABLES##
 #===========#
+
 #Opcion de cambiar la contraseña de root
 
 #while true; do
@@ -152,6 +153,28 @@ echo "zend_extension = /usr/lib/php5/20090626/ioncube_loader_lin_5.3.so" >> /etc
 cp ~/CSHD/source/ioncube_loader_lin_5.3.so /usr/lib/php5/20090626/
 
 ##Fin Apache2##
+
+##Permisos para www-data##
+#========================#
+#Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd y smbpasswd
+echo " " >> /etc/sudoers
+echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd, /usr/sbin/setquota" >> /etc/sudoers
+
+#Modificamos el php.ini para eliminar la restriccion de "exec"
+sed -i '/,pcntl_exec/d' /etc/php5/apache2/php.ini
+
+#Script para añadir usuarios en registro de Joomla
+#Permisos
+touch /var/www/csexec.sh
+chmod +x /var/www/csexec.sh
+chown www-data:www-data csexec.sh
+
+#Script
+echo "#!/bin/bash" >> /var/www/csexec.sh
+echo "mes=$[$(date +%m)+1]" >> /var/www/csexec.sh
+echo "sudo useradd -m -e $(date +%d/$mes/%Y) -g 1221 -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1" >> /var/www/csexec.sh
+echo "(echo $2; echo $2) | sudo smbpasswd -s -a -U $1" >> /var/www/csexec.sh
+echo "setquota -u $1 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
 
 ##Copia de Seguridad##
 #====================#
@@ -428,28 +451,6 @@ cp ~/CSHD/source/csdeluser.1 /usr/share/man/man1
 
 #Cargamos los sources
 source /etc/bash.bashrc
-
-##Permisos para www-data##
-#========================#
-#Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd y smbpasswd
-echo " " >> /etc/sudoers
-echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd, /usr/sbin/setquota" >> /etc/sudoers
-
-#Modificamos el php.ini para eliminar la restriccion de "exec"
-sed -i '/,pcntl_exec/d' /etc/php5/apache2/php.ini
-
-#Script para añadir usuarios en registro de Joomla
-#Permisos
-touch /var/www/csexec.sh
-chmod +x /var/www/csexec.sh
-chown www-data:www-data csexec.sh
-
-#Script
-echo "#!/bin/bash" >> /var/www/csexec.sh
-echo "mes=$[$(date +%m)+1]" >> /var/www/csexec.sh
-echo "sudo useradd -m -e $(date +%d/$mes/%Y) -g 1221 -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1" >> /var/www/csexec.sh
-echo "(echo $2; echo $2) | sudo smbpasswd -s -a -U $1" >> /var/www/csexec.sh
-echo "setquota -u $1 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
 
 #Reiniciamos servicios
 service smbd restart
