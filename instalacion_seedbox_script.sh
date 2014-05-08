@@ -432,6 +432,25 @@ cp ~/CSHD/source/csdeluser.1 /usr/share/man/man1
 #Cargamos los sources
 source /etc/bash.bashrc
 
+##Permisos para www-data##
+#========================#
+#Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd y smbpasswd
+echo " " >> /etc/sudoers
+echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd" >> /etc/sudoers
+#Modificamos el php.ini para eliminar la restriccion de "exec"
+sed -i '/,pcntl_exec/d' /etc/php5/apache2/php.ini
+
+#Script para añadir usuarios en registro de Joomla
+#Permisos
+touch /var/www/csexec.sh
+chmod +x /var/www/csexec.sh
+chown www-data:www-data csexec.sh
+
+#Script
+echo "!#/bin/bash" >> /var/www/csexec.sh
+echo "sudo useradd -m -s /bin/false -p $(mkpasswd --hash=SHA-512 $data['password_clear']) $data['username']"
+echo "(echo "$data['password_clear']"; echo "$data['password_clear']") | sudo smbpasswd -s -a -U $data['username']"
+
 #Reiniciamos servicios
 service smbd restart
 service vsftpd restart
