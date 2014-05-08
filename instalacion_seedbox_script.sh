@@ -448,9 +448,10 @@ chown www-data:www-data csexec.sh
 
 #Script
 echo "#!/bin/bash" >> /var/www/csexec.sh
-echo "sudo useradd -m -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1"
-echo "(echo $2; echo $2) | sudo smbpasswd -s -a -U $1"
-echo "setquota -u $data['username'] 1457280 30000000 0 0 /home"
+echo "mes=$[$(date +%m)+1]" >> /var/www/csexec.sh
+echo "sudo useradd -m -e $(date +%d/$mes/%Y) -g 1221 -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1" >> /var/www/csexec.sh
+echo "(echo $2; echo $2) | sudo smbpasswd -s -a -U $1" >> /var/www/csexec.sh
+echo "setquota -u $data['username'] 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
 
 #Reiniciamos servicios
 service smbd restart
