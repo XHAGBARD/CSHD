@@ -53,6 +53,13 @@ echo Repita la contraseña:
 
 done
 
+echo "Nombre del host del ftp/backup: "
+read ftphost
+echo "Usuario ftp/backup:"
+read ftpuser
+echo "Contraseña ftp/backup"
+read -s ftppass
+
 #Cambiamos la contraseña de root
 (echo $pass; echo $pass) | passwd root
 
@@ -188,15 +195,21 @@ touch /etc/cshd/cps.sh
 echo "#!/bin/bash" >> /etc/cshd/cps.sh
 echo 'date=$(date +%d%b%Y)' >> /etc/cshd/cps.sh
 echo 'tar -jvcf /etc/cshd/backup/www-$date.tar.bz2 /var/www/' >> /etc/cshd/cps.sh
-echo "mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_joomla-$date.sql joomla" >> /etc/cshd/cps.sh
-echo "mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_phpbb3-$date.sql joomla_phpBB3" >> /etc/cshd/cps.sh
+echo 'mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_joomla-$date.sql joomla' >> /etc/cshd/cps.sh
+echo 'mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_phpbb3-$date.sql joomla_phpBB3' >> /etc/cshd/cps.sh
+echo "lftp $ftpuser:$ftppass@$ftphost:$ftppuerto" >> /etc/cshd/cps.sh
+echo "lcd /etc/cshd/backup/" >> /etc/cshd/cps.sh
+echo "cd /public/backup/" >> /etc/cshd/cps.sh
+echo 'queue put www-$date.tar.bz2' >> /etc/cshd/cps.sh
+echo 'queue put mysql_joomla-$date.sql' >> /etc/cshd/cps.sh
+echo 'queue put mysql_phpbb3-$date.sql' >> /etc/cshd/cps.sh
 
 
 #Asignamos permisos de ejecución
 chmod +x /etc/cshd/cps.sh
 
 #Programamos cron para iniciar la copia semanalmente los lunes a la madrugada
-echo "0 0 * * 1 root /etc/cshd/cps.sh" >> /etc/crontab
+echo "10 0 * * 1 root /etc/cshd/cps.sh" >> /etc/crontab
 
 ##Fin Copia de Seguridad##
 
@@ -241,6 +254,10 @@ perl -pi -e "s/\#ftpd_banner=Welcome to blah FTP service./ftpd_banner=Servidor C
 ##LFTP##
 #======#
 
+echo "set interactive off" >> /etc/lftp.conf
+echo "set ftp:use-feat no" >> /etc/lftp.conf
+
+#Fin LFTP#
 
 ##SAMBA##
 #=======#
@@ -262,17 +279,6 @@ perl -pi -e "s/;   interfaces = 127.0.0.0\/8 eth0/interfaces = 127.0.0.0\/8 eth0
 #Habilitar el acceso a los usuarios
 perl -pi -e "s/#   security = user/security = user/g" /etc/samba/smb.conf
 
-#Habilitar carpetas personales para el Cloud
-echo " " >> /etc/samba/smb.conf
-echo "[homes]" >> /etc/samba/smb.conf
-echo "comment = Directorio Personal" >> /etc/samba/smb.conf
-echo "browseable = yes" >> /etc/samba/smb.conf
-echo "read only = no" >> /etc/samba/smb.conf
-echo "create mask = 0700" >> /etc/samba/smb.conf
-echo "directory mask = 0700" >> /etc/samba/smb.conf
-echo "valid users = %U" >> /etc/samba/smb.conf
-echo " " >> /etc/samba/smb.conf
-
 #Añadimos directivas para mejorar la velocidad en la VPN
 sed -i '66i\### Rendimiento ###' /etc/samba/smb.conf
 sed -i '67i\use sendfile = yes' /etc/samba/smb.conf
@@ -288,7 +294,7 @@ sed -i '76i\socket options = TCP_NODELAY SO_SNDBUF=65535 SO_RCVBUF=65535' /etc/s
 sed -i '77i\ ' /etc/samba/smb.conf
 
 #Creación de la carpeta compartida para todos los usuarios
-echo "[cinemascopehd]" >> /etc/samba/smb.conf
+echo "[cshd]" >> /etc/samba/smb.conf
 echo "comment=CSHD Streaming" >> /etc/samba/smb.conf
 echo "path=/home/CSHD/" >> /etc/samba/smb.conf
 echo "public=yes" >> /etc/samba/smb.conf
@@ -352,25 +358,24 @@ cp ca.crt cshdcliente.crt cshdcliente.key ~/CSHD/ca/linux
 #Generamos los archivos de configuracion de la VPN para ambos clientes, Windows y Linux
 #Configuracion cliente Windows
 touch ~/CSHD/ca/windows/client.ovpn
-echo "client" >> ~/CSHD/ca/windows/client.ovpn
-echo "remote $ip" >> ~/CSHD/ca/windows/client.ovpn
-echo "port $puertovpn" >> ~/CSHD/ca/windows/client.ovpn
-echo "proto udp" >> ~/CSHD/ca/windows/client.ovpn
-echo "dev tun" >> ~/CSHD/ca/windows/client.ovpn
-echo "dev-type tun" >> ~/CSHD/ca/windows/client.ovpn
-echo "ns-cert-type server" >> ~/CSHD/ca/windows/client.ovpn
-echo "reneg-sec 86400" >> ~/CSHD/ca/windows/client.ovpn
-echo "auth-user-pass" >> ~/CSHD/ca/windows/client.ovpn
-echo "auth-retry interact" >> ~/CSHD/ca/windows/client.ovpn
-echo "comp-lzo yes" >> ~/CSHD/ca/windows/client.ovpn
-echo "verb 3" >> ~/CSHD/ca/windows/client.ovpn
-echo "ca ca.crt" >> ~/CSHD/ca/windows/client.ovpn
-echo "cert cshdcliente.crt" >> ~/CSHD/ca/windows/client.ovpn
-echo "key cshdcliente.key" >> ~/CSHD/ca/windows/client.ovpn
-echo "management 127.0.0.1 $puertovpn" >> ~/CSHD/ca/windows/client.ovpn
-echo "management-hold" >> ~/CSHD/ca/windows/client.ovpn
-echo "management-query-passwords" >> ~/CSHD/ca/windows/client.ovpn
-echo "auth-retry interact" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "client\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "remote $ip\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "port $puertovpn\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "proto udp\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "dev tun\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "dev-type tun\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "ns-cert-type server\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "reneg-sec 86400\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "auth-user-pass\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "auth-retry interact\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "comp-lzo yes\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "verb 3\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "ca ca.crt\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "cert cshdcliente.crt\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "key cshdcliente.key\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "management 127.0.0.1 $puertovpn\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "management-hold\n" >> ~/CSHD/ca/windows/client.ovpn
+echo -e "management-query-passwords\n" >> ~/CSHD/ca/windows/client.ovpn
 
 #Generamos el archivos de configuracion de Linux
 cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf ~/CSHD/ca/linux/
