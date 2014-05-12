@@ -75,7 +75,7 @@ echo Repita la contraseña:
 done
 
 #Cambiamos la contraseña de root
-(echo $pass; echo $pass) | passwd root
+(echo $pass; echo $pass) | passwd root >> /dev/null
 
 #Recogemos nombre de root
 csid=$(id -nu)
