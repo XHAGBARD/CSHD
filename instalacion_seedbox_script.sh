@@ -592,7 +592,7 @@ echo "Conexión: $ip" | tee -a /cshd.info
 echo "Puerto: $puertossh" | tee -a /cshd.info
 echo " " | tee -a /cshd.info
 echo "#SAMBA" | tee -a /cshd.info
-echo "Ruta: \\\\10.8.0.1\\cinemascopehd" | tee -a /cshd.info
+echo "Ruta: \\\\10.8.0.1\\cshd" | tee -a /cshd.info
 echo "Cloud Personal: \\\\10.8.0.1\\<usuario>" | tee -a /cshd.info
 echo " " | tee -a /cshd.info
 echo "#Webmin" | tee -a /cshd.info
