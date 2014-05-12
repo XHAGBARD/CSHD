@@ -55,6 +55,8 @@ done
 
 echo "Nombre del host del ftp/backup: "
 read ftphost
+echo "Puerto ftp/backup:"
+read ftppuerto
 echo "Usuario ftp/backup:"
 read ftpuser
 cont=0
@@ -189,14 +191,14 @@ sed -i '/,pcntl_exec/d' /etc/php5/apache2/php.ini
 #Permisos
 touch /var/www/csexec.sh
 chmod +x /var/www/csexec.sh
-chown www-data:www-data csexec.sh
+chown www-data:www-data /var/www/csexec.sh
 
 #Script
 echo "#!/bin/bash" >> /var/www/csexec.sh
-echo "mes=$[$(date +%m)+1]" >> /var/www/csexec.sh
-echo "sudo useradd -m -e $(date +%d/$mes/%Y) -g 1221 -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1" >> /var/www/csexec.sh
-echo "(echo $2; echo $2) | sudo smbpasswd -s -a -U $1" >> /var/www/csexec.sh
-echo "setquota -u $1 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
+echo "mes=\$[\$(date +%m)+1]" >> /var/www/csexec.sh
+echo 'sudo useradd -m -e $(date +%d/$mes/%Y) -g 1221 -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1' >> /var/www/csexec.sh
+echo "(echo \$2; echo \$2) | sudo smbpasswd -s -a -U \$1" >> /var/www/csexec.sh
+echo "setquota -u \$1 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
 
 ##Copia de Seguridad##
 #====================#
