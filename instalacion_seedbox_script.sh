@@ -279,12 +279,11 @@ tar -jvxf /tmp/$www -C / --overwrite
 mysql -uroot -p$pass <<EOF
 CREATE DATABASE joomla;
 CREATE DATABASE joomla_phpBB3;
-USE joomla;
-source /tmp/$mysqljoomla;
-USE joomla_phpBB3;
-source /tmp/$mysqlphpbb3;
 exit
 EOF
+
+mysql -uroot -p$pass joomla < /tmp/$mysqljoomla
+mysql -uroot -p$pass joomla_phpBB3 < /tmp/$mysqlphpbb3
 
 #FIN Volcado#
 
