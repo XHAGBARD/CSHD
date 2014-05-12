@@ -231,38 +231,38 @@ echo "10 0 * * 1 root /etc/cshd/cps.sh" >> /etc/crontab
 #=================#
 #Extraer variables últimas copias de seguridad en el ftp
 #Ultima copia de la web
-www=$(lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+www=$(lftp sftp://$ftpuser:$ftppass@$ftphost:$ftppuerto <<EOF
 cd public/backup
 cls www* -t1 | head -1
 EOF
 )
 #Ültima copia de la BD de Joomla
-mysqljoomla=$(lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+mysqljoomla=$(lftp sftp://$ftpuser:$ftppass@$ftphost:$ftppuerto <<EOF
 cd public/backup
 cls mysql_joomla* -t1 | head -1
 EOF
 )
 #Ültima copia de la BD de PHPBB3
-mysqlphpbb3=$(lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+mysqlphpbb3=$(lftp sftp://$ftpuser:$ftppass@$ftphost:$ftppuerto <<EOF
 cd public/backup
 cls mysql_phpbb3* -t1 | head -1
 EOF
 )
 
 #Descarga en carpeta temporal de las copias de seguridad
-lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+lftp sftp://$ftpuser:$ftppass@$ftphost:$ftppuerto <<EOF
 cd public/backup
 lcd /tmp
 get $www
 EOF
 
-lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+lftp sftp://$ftpuser:$ftppass@$ftphost:$ftppuerto <<EOF
 cd public/backup
 lcd /tmp
 get $mysqljoomla
 EOF
 
-lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+lftp sftp://$ftpuser:$ftppass@$ftphost:$ftppuerto <<EOF
 cd public/backup
 lcd /tmp
 get $mysqlphpbb3
