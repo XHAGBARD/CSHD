@@ -193,11 +193,11 @@ echo "setquota -u $1 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
 #Creamos el script
 touch /etc/cshd/cps.sh
 echo "#!/bin/bash" >> /etc/cshd/cps.sh
-echo 'date=$(date +%d%b%Y)' >> /etc/cshd/cps.sh
+echo "date=\$(date +%d%b%Y)" >> /etc/cshd/cps.sh
 echo 'tar -jvcf /etc/cshd/backup/www-$date.tar.bz2 /var/www/' >> /etc/cshd/cps.sh
-echo 'mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_joomla-$date.sql joomla' >> /etc/cshd/cps.sh
-echo 'mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_phpbb3-$date.sql joomla_phpBB3' >> /etc/cshd/cps.sh
-echo "lftp $ftpuser:$ftppass@$ftphost:$ftppuerto" >> /etc/cshd/cps.sh
+echo "mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_joomla-\$date.sql joomla" >> /etc/cshd/cps.sh
+echo "mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_phpbb3-\$date.sql joomla_phpBB3" >> /etc/cshd/cps.sh
+echo "lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto" >> /etc/cshd/cps.sh
 echo "lcd /etc/cshd/backup/" >> /etc/cshd/cps.sh
 echo "cd /public/backup/" >> /etc/cshd/cps.sh
 echo 'queue put www-$date.tar.bz2' >> /etc/cshd/cps.sh
@@ -212,6 +212,51 @@ chmod +x /etc/cshd/cps.sh
 echo "10 0 * * 1 root /etc/cshd/cps.sh" >> /etc/crontab
 
 ##Fin Copia de Seguridad##
+
+##Volcar Web y BD##
+#=================#
+#Extraer variables últimas copias de seguridad en el ftp
+#Ultima copia de la web
+www=$(lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+cd public/backup
+cls www* -t1 | head -1
+EOF
+)
+#Ültima copia de la BD de Joomla
+mysqljoomla=$(lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+cd public/backup
+cls mysql_joomla* -t1 | head -1
+EOF
+)
+#Ültima copia de la BD de PHPBB3
+mysqlphpbb3=$(lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+cd public/backup
+cls mysql_phpbb3* -t1 | head -1
+EOF
+)
+
+#Descarga en carpeta temporal de las copias de seguridad
+lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+cd public/backup
+lcd /tmp
+get $www
+EOF
+
+lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+cd public/backup
+lcd /tmp
+get $mysqljoomla
+EOF
+
+lftp $ftpuser:$ftppass@sftp://$ftphost:$ftppuerto <<EOF
+cd public/backup
+lcd /tmp
+get $mysqlphpbb3
+EOF
+
+#Volcado de las copias de seguridad
+#Volcado de la web
+
 
 ##SSH##
 #=====#
