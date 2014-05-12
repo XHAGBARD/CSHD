@@ -176,6 +176,9 @@ echo "zend_extension = /usr/lib/php5/20090626/ioncube_loader_lin_5.3.so" >> /etc
 #Copiamos el módulo Zend a su directorio
 cp ~/CSHD/source/ioncube_loader_lin_5.3.so /usr/lib/php5/20090626/
 
+#Habilitamos PhpMyAdmin en Apache para localizarlo via web en la ruta http://host/phpmyadmin
+echo "Include /etc/phpmyadmin/apache.conf" >> /etc/apache2/apache2.conf
+
 ##Fin Apache2##
 
 ##Permisos para www-data##
@@ -270,7 +273,7 @@ EOF
 
 #Volcado de las copias de seguridad
 #Extraemos la web
-tar -jvxf /tmp/$www -C /var/www/ --strip-components 1
+tar -jvxf /tmp/$www -C /var/ --overwrite
 
 #Volcamos BD a MySQL
 mysql -uroot -p$pass <<EOF
@@ -311,7 +314,6 @@ perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 1024/g" /etc/ssh/sshd_config
 #======#
 #Copia de seguridad
 if [ -f /etc/vsftpd.conf_bak ]; then
-continue
 else
 cp /etc/vsftpd.conf /etc/vsftpd.conf_bak
 fi
@@ -336,7 +338,6 @@ echo "set ftp:use-feat no" >> /etc/lftp.conf
 #=======#
 #Copia de seguridad
 if [ -f /etc/samba/smb.conf_bak ]; then
-continue
 else
 cp /etc/samba/smb.conf /etc/samba/smb.conf_bak
 fi
