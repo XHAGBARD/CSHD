@@ -255,7 +255,21 @@ get $mysqlphpbb3
 EOF
 
 #Volcado de las copias de seguridad
-#Volcado de la web
+#Extraemos la web
+tar -jvxf /tmp/$www -C /var/www/ --strip-components 1
+
+#Volcamos BD a MySQL
+mysql -uroot -p$pass <<EOF
+CREATE DATABASE joomla;
+CREATE DATABASE joomla_phpBB3;
+USE joomla
+source /tmp/$mysqljoomla
+USE joomla_phpBB3
+source /tmp/$mysqlphpbb3
+exit
+EOF
+
+#FIN Volcado#
 
 
 ##SSH##
