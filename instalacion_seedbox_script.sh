@@ -273,7 +273,7 @@ EOF
 
 #Volcado de las copias de seguridad
 #Extraemos la web
-tar -jvxf /tmp/$www -C /var/ --overwrite
+tar -jvxf /tmp/$www -C / --overwrite
 
 #Volcamos BD a MySQL
 mysql -uroot -p$pass <<EOF
