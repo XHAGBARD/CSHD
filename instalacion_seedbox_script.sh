@@ -57,8 +57,20 @@ echo "Nombre del host del ftp/backup: "
 read ftphost
 echo "Usuario ftp/backup:"
 read ftpuser
-echo "Contraseña ftp/backup"
-read -s ftppass
+cont=0
+while [ "$cont" = 0 ]; do
+echo Contraseña de ftp/backup:
+    read -s ftppass
+echo Repita la contraseña:
+    read -s ftppass2
+        if [ "$ftppass" != "$ftppass2" ]; then
+        clear
+        else
+        cont=1
+        break
+        fi
+
+done
 
 #Cambiamos la contraseña de root
 (echo $pass; echo $pass) | passwd root
