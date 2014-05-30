@@ -179,8 +179,6 @@ cp ~/CSHD/source/ioncube_loader_lin_5.3.so /usr/lib/php5/20090626/
 #Habilitamos PhpMyAdmin en Apache para localizarlo via web en la ruta http://host/phpmyadmin
 echo "Include /etc/phpmyadmin/apache.conf" >> /etc/apache2/apache2.conf
 
-#Eliminamos index.html de /var/www
-rm /var/www/index.html
 
 ##Fin Apache2##
 
@@ -279,6 +277,9 @@ EOF
 #Volcado de las copias de seguridad
 #Extraemos la web
 tar -jvxf /tmp/$www -C / --overwrite
+
+#Eliminamos posible index.html en /var/www
+rm /var/www/index.html
 
 #Volcamos BD a MySQL
 mysql -uroot -p$pass <<EOF
