@@ -73,6 +73,8 @@ echo Repita la contraseña:
         fi
 
 done
+echo "Direcc. Email:"
+read email
 
 #Cambiamos la contraseña de root
 (echo $pass; echo $pass) | passwd root >> /dev/null
@@ -401,7 +403,7 @@ perl -pi -e "s/export KEY_COUNTRY\='US'/export KEY_COUNTRY\='ES'/g" /etc/openvpn
 perl -pi -e "s/export KEY_PROVINCE\='CA'/export KEY_PROVINCE\='AL'/g" /etc/openvpn/easy-rsa/vars
 perl -pi -e "s/export KEY_CITY\='SanFrancisco'/export KEY_CITY\='Elche'/g" /etc/openvpn/easy-rsa/vars
 perl -pi -e "s/export KEY_ORG\='Fort-Funston'/export KEY_ORG\='CSHD'/g" /etc/openvpn/easy-rsa/vars
-perl -pi -e "s/export KEY_EMAIL\='me\@myhost.mydomain'/export KEY_EMAIL\='info\@cinemascopehd.me'/g" /etc/openvpn/easy-rsa/vars
+perl -pi -e "s/export KEY_EMAIL\='me\@myhost.mydomain'/export KEY_EMAIL\='$email'/g" /etc/openvpn/easy-rsa/vars
 perl -pi -e "s/export KEY_CN\=changeme/export KEY_CN\=XHAGBARD/g" /etc/openvpn/easy-rsa/vars
 perl -pi -e "s/export KEY_NAME\=Ximo/export KEY_NAME\=Ximo/g" /etc/openvpn/easy-rsa/vars
 
@@ -610,4 +612,5 @@ echo "contraseña: $pass" | tee -a /cshd.info
 echo " "
 echo "***REINICIANDO SERVICIO SSH***"
 echo "Es muy posible que tengas que volver a conectarte al nuevo puerto configurado"
+ ail -s "Datos instalación servidor CSHD" $email < /cshd.info
 service ssh restart
