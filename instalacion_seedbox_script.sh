@@ -397,13 +397,13 @@ mkdir /etc/openvpn/easy-rsa/
 cp -r /usr/share/doc/openvpn/examples/easy-rsa/2.0/* /etc/openvpn/easy-rsa/
 
 #Modificamos el vars para globalizar los cambios a un mismo formato
-perl -pi -e "s/export KEY_COUNTRY='US'/export KEY_COUNTRY='ES'/g" /etc/openvpn/easy-rsa/vars
-perl -pi -e "s/export KEY_PROVINCE='CA'/export KEY_PROVINCE='AL'/g" /etc/openvpn/easy-rsa/vars
-perl -pi -e "s/export KEY_CITY='SanFrancisco'/export KEY_CITY='Elche'/g" /etc/openvpn/easy-rsa/vars
-perl -pi -e "s/export KEY_ORG='Fort-Funston'/export KEY_ORG='CSHD'/g" /etc/openvpn/easy-rsa/vars
-perl -pi -e "s/export KEY_EMAIL='me@myhost.mydomain'/export KEY_EMAIL='info@cinemascopehd.me'/g" /etc/openvpn/easy-rsa/vars
-perl -pi -e "s/export KEY_CN=changeme/export KEY_CN=XHAGBARD/g" /etc/openvpn/easy-rsa/vars
-perl -pi -e "s/export KEY_NAME=Ximo/export KEY_NAME=Ximo/g" /etc/openvpn/easy-rsa/vars
+perl -pi -e "s/export KEY_COUNTRY\='US'/export KEY_COUNTRY\='ES'/g" /etc/openvpn/easy-rsa/vars
+perl -pi -e "s/export KEY_PROVINCE\='CA'/export KEY_PROVINCE\='AL'/g" /etc/openvpn/easy-rsa/vars
+perl -pi -e "s/export KEY_CITY\='SanFrancisco'/export KEY_CITY\='Elche'/g" /etc/openvpn/easy-rsa/vars
+perl -pi -e "s/export KEY_ORG\='Fort-Funston'/export KEY_ORG\='CSHD'/g" /etc/openvpn/easy-rsa/vars
+perl -pi -e "s/export KEY_EMAIL\='me\@myhost.mydomain'/export KEY_EMAIL\='info\@cinemascopehd.me'/g" /etc/openvpn/easy-rsa/vars
+perl -pi -e "s/export KEY_CN\=changeme/export KEY_CN\=XHAGBARD/g" /etc/openvpn/easy-rsa/vars
+perl -pi -e "s/export KEY_NAME\=Ximo/export KEY_NAME\=Ximo/g" /etc/openvpn/easy-rsa/vars
 
 #Generamos el Master CA
 cd /etc/openvpn/easy-rsa/
@@ -583,7 +583,6 @@ echo " " | tee -a /cshd.info
 echo "#Web" | tee -a /cshd.info
 echo "Dirección web: www.cinemascopehd.me" | tee -a /cshd.info
 echo "Administración Web: www.cinemascopehd.me/administrator" | tee -a /cshd.info
-echo "Forzar Copia de Seguridad: http://www.cinemascopehd.me/index.php?option=com_akeeba&view=backup&key=copiaseguridad" | tee -a /cshd.info
 echo " " | tee -a /cshd.info
 echo "#VPN" | tee -a /cshd.info
 echo "Red: 10.8.0.0" | tee -a /cshd.info
