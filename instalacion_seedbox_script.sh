@@ -319,6 +319,7 @@ perl -pi -e "s/ServerKeyBits 768/ServerKeyBits 1024/g" /etc/ssh/sshd_config
 #======#
 #Copia de seguridad
 if [ -f /etc/vsftpd.conf_bak ]; then
+continue
 else
 cp /etc/vsftpd.conf /etc/vsftpd.conf_bak
 fi
@@ -343,6 +344,7 @@ echo "set ftp:use-feat no" >> /etc/lftp.conf
 #=======#
 #Copia de seguridad
 if [ -f /etc/samba/smb.conf_bak ]; then
+continue
 else
 cp /etc/samba/smb.conf /etc/samba/smb.conf_bak
 fi
