@@ -184,28 +184,6 @@ echo "Include /etc/phpmyadmin/apache.conf" >> /etc/apache2/apache2.conf
 
 ##Fin Apache2##
 
-##Permisos para www-data##
-#========================#
-#Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd, smbpasswd, mkpasswd y setquota
-echo " " >> /etc/sudoers
-echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd, /usr/sbin/setquota" >> /etc/sudoers
-
-#Modificamos el php.ini para eliminar la restriccion de "exec"
-sed -i '/,pcntl_exec/d' /etc/php5/apache2/php.ini
-
-#Script para añadir usuarios en registro de Joomla
-#Permisos
-touch /var/www/csexec.sh
-chmod +x /var/www/csexec.sh
-chown www-data:www-data /var/www/csexec.sh
-
-#Script
-echo "#!/bin/bash" >> /var/www/csexec.sh
-echo "mes=\$[\$(date +%m)+1]" >> /var/www/csexec.sh
-echo 'sudo useradd -m -e $(date +%d/$mes/%Y) -g 1221 -s /bin/false -p $(mkpasswd --hash=SHA-512 $2) $1' >> /var/www/csexec.sh
-echo "(echo \$2; echo \$2) | sudo smbpasswd -s -a -U \$1" >> /var/www/csexec.sh
-echo "setquota -u \$1 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
-
 ##Copia de Seguridad##
 #====================#
 
@@ -536,6 +514,29 @@ quotacheck -avug
 quotaon /home
 
 ##Fin QUOTAS##
+
+##Permisos para www-data##
+#========================#
+#Modificamos sudoers para añadir al usuario www-data permisos de ejecucion en useradd, smbpasswd, mkpasswd y setquota
+echo " " >> /etc/sudoers
+echo "www-data  ALL=(ALL) NOPASSWD: /usr/sbin/useradd, /usr/sbin/smbpasswd, /usr/sbin/mkpasswd, /usr/sbin/setquota" >> /etc/sudoers
+
+#Modificamos el php.ini para eliminar la restriccion de "exec"
+sed -i '/,pcntl_exec/d' /etc/php5/apache2/php.ini
+
+#Script para añadir usuarios en registro de Joomla
+#Permisos
+touch /var/www/csexec.sh
+chmod +x /var/www/csexec.sh
+chown www-data:www-data /var/www/csexec.sh
+
+#Script
+rm /var/www/csexec.sh
+echo "#!/bin/bash" >> /var/www/csexec.sh
+echo "mes=\$[\$(date +%m)+1]" >> /var/www/csexec.sh
+echo 'sudo useradd -m -e $(date +%d/$mes/%Y) -g 1221 -s /bin/bash -p $(mkpasswd --hash=SHA-512 $2) $1' >> /var/www/csexec.sh
+echo "(echo \$2; echo \$2) | sudo smbpasswd -s -a -U \$1" >> /var/www/csexec.sh
+echo "setquota -u \$1 1457280 30000000 0 0 /home" >> /var/www/csexec.sh
 
 #Copiamos los archivos de añadir y eliminar usuarios en su ruta
 cp ~/CSHD/source/csadduser.sh /etc/cshd/
