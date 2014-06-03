@@ -143,7 +143,7 @@ apt-get update
 apt-get -y upgrade
 
 #Instalacion de los paquetes necesarios para el servidor#
-apt-get install -y apache2 php5 php5-curl libapache2-mod-php5 mysql-client mysql-server phpmyadmin sendmail vsftpd lftp samba samba-common smbfs smbclient openvpn openssl openssh-server zip quota whois sudo makepasswd webmin mailutils
+apt-get install -y apache2 php5 php5-curl libapache2-mod-php5 mysql-client mysql-server phpmyadmin sendmail vsftpd lftp samba samba-common smbfs smbclient openvpn openssl openssh-server zip quota whois sudo makepasswd webmin mailutils mkpasswd
 
 if [ $? -gt 0 ]; then
         echo
