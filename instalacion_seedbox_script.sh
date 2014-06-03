@@ -361,8 +361,19 @@ echo "path=/home/CSHD/" >> /etc/samba/smb.conf
 echo "public=yes" >> /etc/samba/smb.conf
 echo "writable=no" >> /etc/samba/smb.conf
 echo "browseable=yes" >> /etc/samba/smb.conf
-echo "readonly=yes" >> /etc/samba/smb.conf
+echo "read only=yes" >> /etc/samba/smb.conf
+echo " " >> /etc/samba/smb.conf
 
+#Creamos carpeta personal para el Cloud
+echo "[homes]" >> /etc/samba/smb.conf
+echo "comment=Cloud Personal" >> /etc/samba/smb.conf
+echo "writable=yes" >> /etc/samba/smb.conf
+echo "browseable=no" >> /etc/samba/smb.conf
+echo "read only=no" >> /etc/samba/smb.conf
+echo "create mask = 0700" >> /etc/samba/smb.conf
+echo "directory mask = 0700" >> /etc/samba/smb.conf
+echo "valid users = %S" >> /etc/samba/smb.conf
+echo " " >> /etc/samba/smb.conf
 ##Fin SAMBA##
 
 ##OpenVPN##
