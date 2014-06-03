@@ -23,7 +23,7 @@ if [ $? -gt 0 ]; then
 fi
 
 #Añadimos al usuario en Samba
-(echo $2; echo $2) | sudo smbpasswd -s -a -U $1
+(echo $2; echo $2) | sudo smbpasswd -a $1
 
 #Habilitamos las quotas en /home para el Cloud
 setquota -u $1 1457280 30000000 0 0 /home
