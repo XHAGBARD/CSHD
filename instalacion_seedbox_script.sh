@@ -451,6 +451,7 @@ echo -e "management-query-passwords\n" >> ~/CSHD/ca/windows/client.ovpn
 
 #Generamos el archivos de configuracion de Linux
 cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf ~/CSHD/ca/linux/
+perl -pi -e 's/ca ca.crt/ca "/etc/openvpn/ca.crt"/g' ~/CSHD/ca/linux/client.conf
 perl -pi -e "s/remote my-server-1 1194/remote $ip $puertovpn/g" ~/CSHD/ca/linux/client.conf
 perl -pi -e 's/cert client.cert/cert "/etc/openvpn/cshdcliente.cert"/g' ~/CSHD/ca/linux/client.conf
 perl -pi -e 's/key client.key/key "/etc/openvpn/cshdcliente.key"/g' ~/CSHD/ca/linux/client.conf
