@@ -193,8 +193,8 @@ touch /etc/cshd/cps.sh
 echo "#!/bin/bash" >> /etc/cshd/cps.sh
 echo "date=\$(date +%d%b%Y)" >> /etc/cshd/cps.sh
 echo 'tar -jvcf /etc/cshd/backup/www-$date.tar.bz2 /var/www/' >> /etc/cshd/cps.sh
-echo "mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_joomla-\$date.sql joomla" >> /etc/cshd/cps.sh
-echo "mysqldump -u$csid -p$pass -r/home/cshd/backup/mysql_phpbb3-\$date.sql joomla_phpBB3" >> /etc/cshd/cps.sh
+echo "mysqldump -u$csid -p$pass joomla > /home/cshd/backup/mysql_joomla-\$date.sql" >> /etc/cshd/cps.sh
+echo "mysqldump -u$csid -p$pass joomla_phpBB3 > /home/cshd/backup/mysql_phpbb3-\$date.sql" >> /etc/cshd/cps.sh
 echo "lftp sftp://$ftpuser:$ftppass@$ftphost:$ftppuerto <<EOF" >> /etc/cshd/cps.sh
 echo "lcd /etc/cshd/backup/" >> /etc/cshd/cps.sh
 echo "cd /public/backup/" >> /etc/cshd/cps.sh
