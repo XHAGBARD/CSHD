@@ -342,16 +342,14 @@ perl -pi -e "s/#   security = user/security = user/g" /etc/samba/smb.conf
 
 #Añadimos directivas para mejorar la velocidad en la VPN
 sed -i '66i\### Rendimiento ###' /etc/samba/smb.conf
-sed -i '67i\use sendfile = yes' /etc/samba/smb.conf
-sed -i '68i\strict locking = no' /etc/samba/smb.conf
+sed -i '67i\use sendfile = true' /etc/samba/smb.conf
 sed -i '69i\read raw = yes' /etc/samba/smb.conf
 sed -i '70i\write raw = yes' /etc/samba/smb.conf
-sed -i '71i\oplocks = yes' /etc/samba/smb.conf
-sed -i '72i\aio read size = 65535' /etc/samba/smb.conf
-sed -i '73i\max xmit = 65535' /etc/samba/smb.conf
-sed -i '74i\deadtime = 15' /etc/samba/smb.conf
+sed -i '72i\aio read size = 16384' /etc/samba/smb.conf
+sed -i '73i\max xmit = 16384' /etc/samba/smb.conf
+sed -i '74i\min receivefile size = 16384' /etc/samba/smb.conf
 sed -i '75i\getwd cache = yes' /etc/samba/smb.conf
-sed -i '76i\socket options = TCP_NODELAY SO_SNDBUF=65535 SO_RCVBUF=65535' /etc/samba/smb.conf
+sed -i '76i\socket options = SO_RCVBUF=131072 SO_SNDBUF=131072 TCP_NODELAY' /etc/samba/smb.conf
 sed -i '77i\ ' /etc/samba/smb.conf
 
 #Creación de la carpeta compartida para todos los usuarios
