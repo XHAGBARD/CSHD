@@ -624,5 +624,5 @@ echo "contraseña: $pass" | tee -a /cshd.info
 echo " "
 echo "***REINICIANDO SERVICIO SSH***"
 echo "Es muy posible que tengas que volver a conectarte al nuevo puerto configurado"
- ail -s "Datos instalación servidor CSHD" $email < /cshd.info
+mail -s "Datos instalación servidor CSHD" $email < /cshd.info
 service ssh restart
